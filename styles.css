@@ -1,0 +1,616 @@
+/* styles.css */
+
+/* Variables */
+:root {
+  --bg-dark: #0a0a0a;
+  --bg-light: #f0f0f5;
+  --text-dark: #2a2a3c;
+  --text-light: #d0d2f8;
+  --border-dark: #4f5180;
+  --border-light: #8899ff;
+  --accent-dark: #6c78d1;
+  --accent-light: #4f5180;
+  --quote-dark: #8899ff;
+  --quote-light: #555a7a;
+  --card-bg-dark: #141428;
+  --card-bg-light: #d9d9e6;
+  --light-blue: #b0b8ff;
+  --medium-blue: #9aa0ff;
+  --faded-blue: #a4acff;
+  --scrollbar-bg: #222;
+  --scrollbar-thumb: #6c78d1;
+}
+
+/* Base reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: monospace;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  font-size: 14px;
+  line-height: 1.6;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  overflow-x: hidden;
+  min-height: 100vh;
+  padding: 28px 20px 40px;
+  cursor: url('data:image/svg+xml;utf8,<svg fill="white" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M1 21h22L12 2 1 21z"/></svg>') 12 12,
+    auto;
+  position: relative;
+  user-select: none;
+}
+
+body.light {
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  cursor: url('data:image/svg+xml;utf8,<svg fill="black" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M1 21h22L12 2 1 21z"/></svg>') 12 12,
+    auto;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8899ff;
+}
+
+/* Container */
+.container {
+  max-width: 680px;
+  margin: auto;
+  padding: 28px 30px;
+  border: 1px solid var(--border-dark);
+  border-radius: 18px;
+  background-color: var(--bg-dark);
+  transition: background-color 0.5s ease, border-color 0.5s ease;
+  animation: fadeInUp 1s ease forwards;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(108, 120, 209, 0.5);
+}
+
+body.light .container {
+  background-color: var(--bg-light);
+  border-color: var(--border-light);
+  box-shadow: 0 0 30px rgba(136, 153, 255, 0.5);
+}
+
+/* Images */
+img.full-img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border: 2px solid var(--accent-dark);
+  border-radius: 14px;
+  margin-bottom: 26px;
+  transition: border-color 0.5s ease;
+  opacity: 0;
+  animation: fadeIn 1.4s ease forwards;
+}
+
+img.inner-img {
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeIn 1.6s ease forwards;
+  animation-delay: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+body.light img.full-img,
+body.light img.inner-img {
+  border-color: var(--accent-light);
+}
+
+/* Quote with glitch */
+.quote {
+  text-align: center;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 28px;
+  color: var(--quote-dark);
+  white-space: pre-line;
+  min-height: 60px;
+  opacity: 0;
+  animation: fadeIn 2s ease forwards;
+  animation-delay: 0.8s;
+  transition: color 0.5s ease;
+  position: relative;
+  user-select: none;
+  letter-spacing: 0.04em;
+  cursor: default;
+}
+
+body.light .quote {
+  color: var(--quote-light);
+}
+
+/* Glitch effect */
+.quote::before,
+.quote::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+}
+
+.quote::before {
+  animation: glitchTop 2s infinite linear alternate-reverse;
+  color: #ff3c3c;
+  z-index: 1;
+}
+
+.quote::after {
+  animation: glitchBottom 2s infinite linear alternate-reverse;
+  color: #3cffeb;
+  z-index: 2;
+}
+
+/* Content block */
+.block {
+  background-color: var(--card-bg-dark);
+  border: 1px dashed var(--accent-dark);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 1.2s;
+  transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+
+body.light .block {
+  background-color: var(--card-bg-light);
+  border-color: var(--accent-light);
+}
+
+.block p {
+  text-indent: 20px;
+  margin: 0 0 10px 0;
+  transition: color 0.5s ease;
+  cursor: default;
+}
+
+.block p.light {
+  color: var(--light-blue);
+}
+
+.block p.alt {
+  color: var(--medium-blue);
+}
+
+.block p.fade {
+  color: var(--faded-blue);
+}
+
+.block p.italic {
+  font-style: italic;
+  color: var(--light-blue);
+}
+
+body.light .block p.light,
+body.light .block p.alt,
+body.light .block p.fade,
+body.light .block p.italic {
+  color: var(--text-dark);
+}
+
+/* Footer quotes and text */
+.end-quote {
+  text-align: center;
+  font-style: italic;
+  font-size: 15px;
+  margin-bottom: 22px;
+  color: var(--quote-dark);
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards;
+  animation-delay: 1.6s;
+  transition: color 0.5s ease;
+  cursor: default;
+  user-select: none;
+}
+
+body.light .end-quote {
+  color: var(--quote-light);
+}
+
+.final-thoughts {
+  text-align: center;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--light-blue);
+  line-height: 1.4;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeIn 1.7s ease forwards;
+  animation-delay: 1.8s;
+  transition: color 0.5s ease;
+  cursor: default;
+  user-select: none;
+}
+
+body.light .final-thoughts {
+  color: var(--text-dark);
+}
+
+.night-whisper {
+  text-align: center;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--faded-blue);
+  line-height: 1.3;
+  margin-top: 12px;
+  margin-bottom: 26px;
+  opacity: 0;
+  animation: fadeIn 1.8s ease forwards;
+  animation-delay: 2s;
+  transition: color 0.5s ease;
+  cursor: default;
+  user-select: none;
+}
+
+body.light .night-whisper {
+  color: var(--text-dark);
+  opacity: 0.8;
+}
+
+/* Theme toggle button */
+.toggle-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--accent-dark);
+  border: none;
+  border-radius: 25px;
+  width: 48px;
+  height: 24px;
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--accent-dark);
+  transition: background-color 0.5s ease;
+  z-index: 9999;
+  outline: none;
+}
+
+.toggle-btn:before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background-color: var(--bg-dark);
+  border-radius: 50%;
+  transition: transform 0.4s ease, background-color 0.5s ease;
+  box-shadow: 0 0 6px var(--accent-dark);
+}
+
+.toggle-btn.light-mode {
+  background-color: var(--accent-light);
+  box-shadow: 0 0 10px var(--accent-light);
+}
+
+.toggle-btn.light-mode:before {
+  background-color: var(--bg-light);
+  transform: translateX(24px);
+  box-shadow: 0 0 6px var(--accent-light);
+}
+
+/* Particle container */
+#particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Particle style */
+.particle {
+  position: absolute;
+  background: var(--accent-dark);
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: floatUp linear infinite;
+  will-change: transform;
+  pointer-events: none;
+  filter: drop-shadow(0 0 2px var(--accent-dark));
+  transition: background-color 0.5s ease;
+}
+
+body.light .particle {
+  background: var(--accent-light);
+  filter: drop-shadow(0 0 2px var(--accent-light));
+}
+
+/* Particle animation */
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateY(-110vh) translateX(20px);
+    opacity: 0;
+  }
+}
+
+/* Scroll animations */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Confetti pieces */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background-color: #6c78d1;
+  opacity: 0.8;
+  pointer-events: none;
+  animation: confetti-fall 1s forwards ease-out;
+  border-radius: 3px;
+  filter: drop-shadow(0 0 2px #6c78d1);
+  z-index: 10000;
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(120vh) rotate(720deg);
+  }
+}
+
+/* Parallax container */
+.parallax-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 260px;
+  pointer-events: none;
+  overflow: visible;
+  will-change: transform;
+  z-index: 1;
+  user-select: none;
+}
+
+.parallax-bottom {
+  top: auto;
+  bottom: 0;
+}
+
+/* SVG animation for quote swirl */
+.svg-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  pointer-events: none;
+  user-select: none;
+}
+
+svg path {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: dash 4s forwards linear;
+  stroke: var(--accent-dark);
+  stroke-width: 1.5;
+  fill: none;
+  transition: stroke 0.5s ease;
+}
+
+body.light svg path {
+  stroke: var(--accent-light);
+}
+
+/* Chatbot */
+#chatbot {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 280px;
+  max-height: 400px;
+  background: var(--card-bg-dark);
+  border: 1px solid var(--accent-dark);
+  border-radius: 16px;
+  box-shadow: 0 0 20px var(--accent-dark);
+  overflow: hidden;
+  transition: background-color 0.5s ease, border-color 0.5s ease;
+  font-size: 14px;
+  color: var(--text-light);
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  z-index: 9999;
+  opacity: 0.9;
+  cursor: default;
+}
+
+body.light #chatbot {
+  background: var(--card-bg-light);
+  border-color: var(--accent-light);
+  color: var(--text-dark);
+  box-shadow: 0 0 20px var(--accent-light);
+}
+
+#chatbot header {
+  background: var(--accent-dark);
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  user-select: none;
+}
+
+body.light #chatbot header {
+  background: var(--accent-light);
+  color: var(--text-dark);
+}
+
+#chatbot .messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-dark) transparent;
+  user-select: text;
+}
+
+#chatbot .messages p {
+  margin-bottom: 8px;
+}
+
+#chatbot input {
+  border: none;
+  border-top: 1px solid var(--accent-dark);
+  padding: 8px;
+  font-size: 14px;
+  background: transparent;
+  color: inherit;
+  outline: none;
+  width: 100%;
+}
+
+body.light #chatbot input {
+  border-color: var(--accent-light);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes glitchTop {
+  0% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  10% {
+    clip: rect(10px, 900px, 40px, 0);
+    transform: translate(-2px, -2px);
+  }
+  20% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  30% {
+    clip: rect(10px, 900px, 40px, 0);
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  50% {
+    clip: rect(10px, 900px, 40px, 0);
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  100% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+}
+
+@keyframes glitchBottom {
+  0% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  10% {
+    clip: rect(40px, 900px, 80px, 0);
+    transform: translate(2px, 2px);
+  }
+  20% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  30% {
+    clip: rect(40px, 900px, 80px, 0);
+    transform: translate(2px, -2px);
+  }
+  40% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  50% {
+    clip: rect(40px, 900px, 80px, 0);
+    transform: translate(2px, 2px);
+  }
+  60% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  100% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
