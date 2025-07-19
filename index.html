@@ -1,52 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ultimate Echo Profile</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your AniList Bio Website</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <button id="theme-toggle" class="toggle-btn" aria-label="Toggle Dark/Light Mode"></button>
 
-  <div id="particles"></div>
+  <header>
+    <h1 class="fade-in">Welcome to My World</h1>
+  </header>
 
-  <div class="parallax-layer" id="parallax-top"></div>
-  <div class="parallax-layer parallax-bottom" id="parallax-bottom"></div>
+  <main>
+    <div class="bio-container fade-in-delay">
+      <!-- YOUR BIO STARTS HERE -->
+      <div class="anilist-bio">
+        <img src="https://i.postimg.cc/W4hvMHYM/wp2661631.jpg" class="top-img">
 
-  <div class="container">
-    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Full Profile Image" class="full-img" />
+        <div class="quote">
+          “I am the echo in empty rooms<br>the silence after my last message.”
+        </div>
 
-    <div class="svg-container" aria-hidden="true">
-      <svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-        <path d="M10 70 Q 100 10 190 70" />
-      </svg>
+        <div class="bio-block">
+          <img src="https://cdn.pfps.gg/banners/6809-sad-anime.png" class="inner-img" />
+
+          <p>I once bought new notebooks. Thought I’d fill them with poems and plans. They’re still blank. I sleep beside them sometimes as if they’ll write my healing for me.</p>
+
+          <p class="alt">I made a playlist called <b>“better days.”</b> It stops at track three. I haven’t pressed play in months. Some songs are too honest.</p>
+
+          <p>I promised I’d visit. Said we’d laugh till sunrise, like we used to. But I kept choosing sleep over people, distance over effort. I let the silence win.</p>
+
+          <p class="alt">I typed out a message three paragraphs long. It said everything. I backspaced it all. No one needs to carry my chaos.</p>
+
+          <p>I told them I was catching up on shows, writing again. But the truth? I just laid there, staring at the ceiling cracks, connecting them like constellations of failure.</p>
+
+          <p class="alt">Every unread message is an anchor. Every paused episode, a moment I’ll never live again. Grief isn't always loud. Sometimes it’s just stillness.</p>
+
+          <p class="alt italic">I keep telling myself I’ll come back to the people, the dreams, the version of me I abandoned. But most nights, I just scroll and pretend I’m okay with fading quietly.</p>
+
+          <img src="https://i.postimg.cc/CxVpTWS0/d8qxrqz-1dacb17b-995f-4131-b82f-c9f123d4976f.png" class="inner-img">
+        </div>
+
+        <div class="quote small">
+          “Maybe in another life,<br>I stayed.<br>I pressed send.<br>I healed.<br>Here, I am just disappearing.”
+        </div>
+
+        <div class="footer-text">
+          Notebooks are tombstones of things I never said. Playlists are eulogies for who I used to be. Messages are confessions I couldn’t deliver. Silence is my cruelest companion. Memories are ghosts I sleep beside.
+        </div>
+
+        <div class="quote tiny">
+          I whispered to the night “stay” but it turned its back, and I was alone again.
+        </div>
+
+        <img src="https://wallpapercave.com/wp/wp6081521.jpg" class="bottom-img">
+      </div>
+      <!-- YOUR BIO ENDS HERE -->
     </div>
+  </main>
 
-    <div class="quote" data-text="Don't make a wish, make a plan.">Don't make a wish, make a plan.</div>
-
-    <div class="block scroll-animate">
-      <p class="light">Hi there! This is your ultra-animated profile. Get ready for some wild-ass shit:</p>
-      <p class="alt">- Glitchy quotes<br>- Parallax layers<br>- Sparkly particle backgrounds<br>- Day/Night theme toggle</p>
-      <p class="fade italic">Stay tuned for more fun.</p>
-    </div>
-
-    <img src="https://images.unsplash.com/photo-1517816428104-45e84e3df5b3?auto=format&fit=crop&w=600&q=80" alt="Inner Image" class="inner-img scroll-animate" />
-
-    <div class="end-quote scroll-animate">— Echo's Final Whisper —</div>
-    <div class="final-thoughts scroll-animate">“When life glitches, dance with the chaos.”</div>
-    <div class="night-whisper scroll-animate">Night mode for the dreamers.</div>
-  </div>
-
-  <div id="chatbot" aria-label="Chatbot widget" role="region" aria-live="polite" aria-atomic="false">
-    <header>Echo Bot</header>
-    <div class="messages" tabindex="0"></div>
-    <input type="text" id="chat-input" aria-label="Type your message" placeholder="Say hi..." autocomplete="off" />
-  </div>
+  <footer>
+    <p>Crafted with shadow & silence.</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
-
 </html>
