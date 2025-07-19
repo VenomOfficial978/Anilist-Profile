@@ -2,66 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Echo in Silence</title>
-
-  <!-- FONT (Monospace aesthetic) -->
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Echo Profile</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
+      margin: 0;
       background: #0a0a0a;
-      font-family: 'Fira Code', monospace;
+      font-family: monospace;
       color: #d0d2f8;
+      font-size: 14px;
       line-height: 1.6;
-      padding: 24px;
-      cursor: none;
-      scroll-behavior: smooth;
-      overflow-x: hidden;
-    }
-
-    .cursor {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #8899ff;
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 9999;
-      transition: transform 0.1s ease;
     }
 
     .container {
-      max-width: 720px;
+      max-width: 680px;
       margin: auto;
-      padding: 28px 24px;
-      border: 1px solid #4f5180;
-      border-radius: 18px;
-      background: #0a0a0a;
-      animation: fadeIn 1.4s ease-in-out;
-    }
-
-    img {
-      width: 100%;
-      object-fit: cover;
-      border-radius: 14px;
-      display: block;
-    }
-
-    .main-img {
-      max-height: 260px;
-      border: 2px solid #6c78d1;
-      margin-bottom: 26px;
-      animation: fadeUp 1.2s ease forwards;
+      padding: 28px 20px;
     }
 
     .quote {
@@ -71,180 +27,160 @@
       font-size: 20px;
       margin-bottom: 28px;
       color: #8899ff;
-      opacity: 0;
-      animation: typeIn 3s steps(50, end) forwards;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 2px solid #8899ff;
-      width: 100%;
-      max-width: 100%;
-      margin-inline: auto;
+      white-space: pre-line;
+      animation: fadeIn 2s ease forwards;
+      min-height: 60px;
     }
 
-    .box {
+    .block {
       background: #141428;
       border: 1px dashed #6c78d1;
       border-radius: 14px;
       padding: 20px;
       margin-bottom: 24px;
-      animation: fadeIn 1.8s ease forwards;
     }
 
-    .box img {
+    img.full-img {
+      width: 100%;
+      max-height: 260px;
+      object-fit: cover;
+      border: 2px solid #6c78d1;
+      border-radius: 14px;
+      margin-bottom: 26px;
+    }
+
+    img.inner-img {
+      width: 100%;
       max-height: 240px;
+      object-fit: cover;
+      border-radius: 12px;
       margin-bottom: 20px;
     }
 
-    .box p {
+    p {
       text-indent: 20px;
-      margin: 0 0 12px 0;
-      animation: fadeUp 1s ease forwards;
+      margin: 0 0 10px 0;
     }
 
-    .box p:nth-child(2n) {
+    p.light {
       color: #b0b8ff;
     }
 
-    .box p:nth-child(4) {
+    p.alt {
       color: #9aa0ff;
     }
 
-    .box p:nth-child(6) {
+    p.fade {
       color: #a4acff;
     }
 
-    .box p:last-child {
-      color: #b0b8ff;
+    p.italic {
       font-style: italic;
+      color: #b0b8ff;
     }
 
-    .bottom-quote {
+    .end-quote {
       text-align: center;
       font-style: italic;
       font-size: 15px;
       margin-bottom: 22px;
       color: #97a3ff;
-      animation: fadeIn 2s ease forwards;
     }
 
-    .bottom-quote:hover {
-      color: #c4ccff;
-      text-shadow: 0 0 6px #8899ff;
-    }
-
-    .footer-text {
+    .final-thoughts {
       text-align: center;
       font-size: 13px;
       letter-spacing: 1px;
       color: #c4ccff;
       line-height: 1.4;
       margin-bottom: 20px;
-      animation: fadeIn 2.2s ease forwards;
     }
 
-    .whisper {
+    .night-whisper {
       text-align: center;
       font-style: italic;
       font-size: 13px;
       color: #a0a8ff;
       line-height: 1.3;
-      margin: 12px 0 26px;
-      animation: fadeIn 2.4s ease forwards;
+      margin-top: 12px;
+      margin-bottom: 26px;
     }
 
     @keyframes fadeIn {
-      0% {opacity: 0; transform: translateY(20px);}
-      100% {opacity: 1; transform: translateY(0);}
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
-    @keyframes fadeUp {
-      0% {opacity: 0; transform: translateY(30px);}
-      100% {opacity: 1; transform: translateY(0);}
-    }
-
-    @keyframes typeIn {
-      from {width: 0;}
-      to {width: 100%;}
-    }
-
+    /* Responsive tweaks */
     @media (max-width: 600px) {
-      .container {
-        padding: 18px 16px;
-      }
-
       .quote {
         font-size: 17px;
-      }
-
-      .bottom-quote {
-        font-size: 14px;
-      }
-
-      .footer-text, .whisper {
-        font-size: 12px;
       }
     }
   </style>
 </head>
+
 <body>
-
-  <!-- Custom Cursor -->
-  <div class="cursor" id="cursor"></div>
-
-  <!-- Lofi Background -->
-  <audio autoplay loop muted>
-    <source src="https://cdn.pixabay.com/download/audio/2023/04/17/audio_5b7bbbaad3.mp3?filename=relaxing-vlog-lofi-147827.mp3" type="audio/mp3">
-  </audio>
-
   <div class="container">
-    <img src="https://i.postimg.cc/W4hvMHYM/wp2661631.jpg" alt="header" class="main-img">
+    <img src="https://i.postimg.cc/W4hvMHYM/wp2661631.jpg" class="full-img" alt="Top Image" />
 
     <div class="quote">
-      “I am the echo in empty rooms the silence after my last message.”
+      <span id="typewriter"></span>
     </div>
 
-    <div class="box">
-      <img src="https://cdn.pfps.gg/banners/6809-sad-anime.png" alt="banner">
+    <div class="block">
+      <img src="https://cdn.pfps.gg/banners/6809-sad-anime.png" class="inner-img" alt="Banner" />
 
       <p>I once bought new notebooks. Thought I’d fill them with poems and plans. They’re still blank. I sleep beside them sometimes as if they’ll write my healing for me.</p>
 
-      <p>I made a playlist called <b>“better days.”</b> It stops at track three. I haven’t pressed play in months. Some songs are too honest.</p>
+      <p class="light">I made a playlist called <b>“better days.”</b> It stops at track three. I haven’t pressed play in months. Some songs are too honest.</p>
 
       <p>I promised I’d visit. Said we’d laugh till sunrise, like we used to. But I kept choosing sleep over people, distance over effort. I let the silence win.</p>
 
-      <p>I typed out a message three paragraphs long. It said everything. I backspaced it all. No one needs to carry my chaos.</p>
+      <p class="alt">I typed out a message three paragraphs long. It said everything. I backspaced it all. No one needs to carry my chaos.</p>
 
       <p>I told them I was catching up on shows, writing again. But the truth? I just laid there, staring at the ceiling cracks, connecting them like constellations of failure.</p>
 
-      <p>Every unread message is an anchor. Every paused episode, a moment I’ll never live again. Grief isn't always loud. Sometimes it’s just stillness.</p>
+      <p class="fade">Every unread message is an anchor. Every paused episode, a moment I’ll never live again. Grief isn't always loud. Sometimes it’s just stillness.</p>
 
-      <p>I keep telling myself I’ll come back to the people, the dreams, the version of me I abandoned. But most nights, I just scroll and pretend I’m okay with fading quietly.</p>
+      <p class="italic">I keep telling myself I’ll come back to the people, the dreams, the version of me I abandoned. But most nights, I just scroll and pretend I’m okay with fading quietly.</p>
 
-      <img src="https://i.postimg.cc/CxVpTWS0/d8qxrqz-1dacb17b-995f-4131-b82f-c9f123d4976f.png" alt="sad">
+      <img src="https://i.postimg.cc/CxVpTWS0/d8qxrqz-1dacb17b-995f-4131-b82f-c9f123d4976f.png" class="inner-img" alt="Lower Image" />
     </div>
 
-    <div class="bottom-quote">
+    <div class="end-quote">
       “Maybe in another life,<br>I stayed.<br>I pressed send.<br>I healed.<br>Here, I am just disappearing.”
     </div>
 
-    <div class="footer-text">
+    <div class="final-thoughts">
       Notebooks are tombstones of things I never said. Playlists are eulogies for who I used to be. Messages are confessions I couldn’t deliver. Silence is my cruelest companion. Memories are ghosts I sleep beside.
     </div>
 
-    <div class="whisper">
+    <div class="night-whisper">
       I whispered to the night “stay” but it turned its back, and I was alone again.
     </div>
 
-    <img src="https://wallpapercave.com/wp/wp6081521.jpg" alt="footer" class="main-img">
+    <img src="https://wallpapercave.com/wp/wp6081521.jpg" class="full-img" alt="Bottom Image" />
   </div>
 
   <script>
-    const cursor = document.getElementById('cursor');
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.pageX + 'px';
-      cursor.style.top = e.pageY + 'px';
-    });
-  </script>
+    const text = "“I am the echo in empty rooms\nThe silence after my last message.”";
+    const output = document.getElementById("typewriter");
+    let i = 0;
 
+    function typeWriter() {
+      if (i < text.length) {
+        if (text[i] === '\n') {
+          output.innerHTML += '<br>';
+        } else {
+          output.innerHTML += text[i];
+        }
+        i++;
+        setTimeout(typeWriter, 50);
+      }
+    }
+
+    typeWriter();
+  </script>
 </body>
 </html>
