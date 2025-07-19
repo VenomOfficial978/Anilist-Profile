@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Echo in Silence</title>
+
+  <!-- FONT (Monospace aesthetic) -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
@@ -13,10 +17,27 @@
 
     body {
       background: #0a0a0a;
-      font-family: monospace;
+      font-family: 'Fira Code', monospace;
       color: #d0d2f8;
       line-height: 1.6;
-      padding: 20px;
+      padding: 24px;
+      cursor: none;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    .cursor {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #8899ff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      transition: transform 0.1s ease;
     }
 
     .container {
@@ -51,7 +72,13 @@
       margin-bottom: 28px;
       color: #8899ff;
       opacity: 0;
-      animation: fadeInDelay 1.6s ease forwards;
+      animation: typeIn 3s steps(50, end) forwards;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #8899ff;
+      width: 100%;
+      max-width: 100%;
+      margin-inline: auto;
     }
 
     .box {
@@ -100,6 +127,11 @@
       animation: fadeIn 2s ease forwards;
     }
 
+    .bottom-quote:hover {
+      color: #c4ccff;
+      text-shadow: 0 0 6px #8899ff;
+    }
+
     .footer-text {
       text-align: center;
       font-size: 13px;
@@ -130,9 +162,9 @@
       100% {opacity: 1; transform: translateY(0);}
     }
 
-    @keyframes fadeInDelay {
-      0% {opacity: 0;}
-      100% {opacity: 1;}
+    @keyframes typeIn {
+      from {width: 0;}
+      to {width: 100%;}
     }
 
     @media (max-width: 600px) {
@@ -155,11 +187,20 @@
   </style>
 </head>
 <body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+
+  <!-- Lofi Background -->
+  <audio autoplay loop muted>
+    <source src="https://cdn.pixabay.com/download/audio/2023/04/17/audio_5b7bbbaad3.mp3?filename=relaxing-vlog-lofi-147827.mp3" type="audio/mp3">
+  </audio>
+
   <div class="container">
     <img src="https://i.postimg.cc/W4hvMHYM/wp2661631.jpg" alt="header" class="main-img">
 
     <div class="quote">
-      “I am the echo in empty rooms<br>the silence after my last message.”
+      “I am the echo in empty rooms the silence after my last message.”
     </div>
 
     <div class="box">
@@ -196,5 +237,14 @@
 
     <img src="https://wallpapercave.com/wp/wp6081521.jpg" alt="footer" class="main-img">
   </div>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.pageX + 'px';
+      cursor.style.top = e.pageY + 'px';
+    });
+  </script>
+
 </body>
 </html>
