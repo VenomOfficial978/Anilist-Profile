@@ -1,4 +1,4 @@
-/* Variables */
+/* VARIABLES */
 :root {
   --bg-dark: #0a0a0a;
   --bg-light: #f0f0f5;
@@ -19,7 +19,7 @@
   --scrollbar-thumb: #6c78d1;
 }
 
-/* Base reset */
+/* BASE RESET */
 * {
   margin: 0;
   padding: 0;
@@ -36,7 +36,8 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   padding: 28px 20px 40px;
-  cursor: url('data:image/svg+xml;utf8,<svg fill="white" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M1 21h22L12 2 1 21z"/></svg>') 12 12, auto;
+  cursor: url('data:image/svg+xml;utf8,<svg fill="white" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M1 21h22L12 2 1 21z"/></svg>') 12 12,
+    auto;
   position: relative;
   user-select: none;
 }
@@ -44,29 +45,27 @@ body {
 body.light {
   background-color: var(--bg-light);
   color: var(--text-dark);
-  cursor: url('data:image/svg+xml;utf8,<svg fill="black" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M1 21h22L12 2 1 21z"/></svg>') 12 12, auto;
+  cursor: url('data:image/svg+xml;utf8,<svg fill="black" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M1 21h22L12 2 1 21z"/></svg>') 12 12,
+    auto;
 }
 
-/* Scrollbar */
+/* SCROLLBAR */
 ::-webkit-scrollbar {
   width: 10px;
 }
-
 ::-webkit-scrollbar-track {
   background: var(--scrollbar-bg);
 }
-
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb);
   border-radius: 6px;
   transition: background-color 0.3s ease;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #8899ff;
 }
 
-/* Container */
+/* CONTAINER */
 .container {
   max-width: 680px;
   margin: auto;
@@ -88,30 +87,37 @@ body.light .container {
   box-shadow: 0 0 30px rgba(136, 153, 255, 0.5);
 }
 
-/* Images */
-.top-img, .bottom-img, .inner-img {
+/* IMAGES */
+.top-img,
+.bottom-img,
+.inner-img {
   width: 100%;
   max-height: 260px;
   object-fit: cover;
   border-radius: 14px;
   border: 2px solid var(--accent-dark);
   margin-bottom: 26px;
-  transition: border-color 0.5s ease;
+  transition: border-color 0.5s ease, opacity 1s ease;
   opacity: 0;
   animation: fadeIn 1.4s ease forwards;
 }
-
-.top-img { animation-delay: 0.2s; }
-.inner-img { animation-delay: 0.4s; max-height: 240px; }
-.bottom-img { animation-delay: 0.6s; }
-
+.top-img {
+  animation-delay: 0.2s;
+}
+.inner-img {
+  animation-delay: 0.4s;
+  max-height: 240px;
+}
+.bottom-img {
+  animation-delay: 0.6s;
+}
 body.light .top-img,
 body.light .bottom-img,
 body.light .inner-img {
   border-color: var(--accent-light);
 }
 
-/* Quotes */
+/* QUOTES */
 .quote {
   font-style: italic;
   font-weight: 600;
@@ -150,7 +156,34 @@ body.light .quote {
   font-style: italic;
 }
 
-/* Bio block */
+/* GLITCH EFFECT ON QUOTES */
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+}
+
+.glitch::before {
+  animation: glitchTop 2s infinite linear alternate-reverse;
+  color: #ff3c3c;
+  z-index: 1;
+  top: 0;
+  left: 2px;
+}
+
+.glitch::after {
+  animation: glitchBottom 2s infinite linear alternate-reverse;
+  color: #3cffeb;
+  z-index: 2;
+  top: 0;
+  left: -2px;
+}
+
+/* BIO BLOCK */
 .bio-block {
   background-color: var(--card-bg-dark);
   border: 1px dashed var(--accent-dark);
@@ -189,7 +222,7 @@ body.light .bio-block p.italic {
   color: var(--text-dark);
 }
 
-/* Footer text */
+/* FOOTER TEXT */
 .footer-text {
   font-size: 13px;
   letter-spacing: 1px;
@@ -207,13 +240,12 @@ body.light .footer-text {
   color: var(--text-dark);
 }
 
-/* Fade-in animation */
+/* FADE-IN ANIMATIONS */
 @keyframes fadeIn {
   to {
     opacity: 1;
   }
 }
-
 @keyframes fadeInUp {
   0% {
     opacity: 0;
@@ -225,19 +257,89 @@ body.light .footer-text {
   }
 }
 
-/* Scroll animations */
+/* GLITCH ANIMATIONS */
+@keyframes glitchTop {
+  0% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  10% {
+    clip: rect(10px, 900px, 40px, 0);
+    transform: translate(-2px, -2px);
+  }
+  20% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  30% {
+    clip: rect(10px, 900px, 40px, 0);
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  50% {
+    clip: rect(10px, 900px, 40px, 0);
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  100% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+}
+
+@keyframes glitchBottom {
+  0% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  10% {
+    clip: rect(40px, 900px, 80px, 0);
+    transform: translate(2px, 2px);
+  }
+  20% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  30% {
+    clip: rect(40px, 900px, 80px, 0);
+    transform: translate(2px, -2px);
+  }
+  40% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  50% {
+    clip: rect(40px, 900px, 80px, 0);
+    transform: translate(2px, 2px);
+  }
+  60% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+  100% {
+    clip: rect(0, 900px, 0, 0);
+    transform: translate(0);
+  }
+}
+
+/* SCROLL ANIMATION */
 .scroll-animate {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
-
 .scroll-animate.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Theme toggle button */
+/* THEME TOGGLE BUTTON */
 .toggle-btn {
   position: fixed;
   top: 20px;
@@ -253,10 +355,10 @@ body.light .footer-text {
   z-index: 9999;
   outline: none;
   user-select: none;
+  overflow: visible;
 }
-
 .toggle-btn:before {
-  content: '';
+  content: "";
   position: absolute;
   top: 3px;
   left: 3px;
@@ -267,14 +369,85 @@ body.light .footer-text {
   transition: transform 0.4s ease, background-color 0.5s ease;
   box-shadow: 0 0 6px var(--accent-dark);
 }
-
 .toggle-btn.light-mode {
   background-color: var(--accent-light);
   box-shadow: 0 0 10px var(--accent-light);
 }
-
 .toggle-btn.light-mode:before {
   background-color: var(--bg-light);
   transform: translateX(24px);
   box-shadow: 0 0 6px var(--accent-light);
+}
+
+/* PARTICLES */
+#particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* PARTICLE STYLE */
+.particle {
+  position: absolute;
+  background: var(--accent-dark);
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: floatUp linear infinite;
+  will-change: transform;
+  pointer-events: none;
+  filter: drop-shadow(0 0 2px var(--accent-dark));
+  transition: background-color 0.5s ease;
+  width: 6px;
+  height: 6px;
+}
+body.light .particle {
+  background: var(--accent-light);
+  filter: drop-shadow(0 0 2px var(--accent-light));
+}
+
+/* PARTICLE ANIMATION */
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.2;
   }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-110vh) translateX(20px);
+    opacity: 0;
+  }
+}
+
+/* CONFETTI */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background-color: #6c78d1;
+  opacity: 0.8;
+  pointer-events: none;
+  animation: confetti-fall 1s forwards ease-out;
+  border-radius: 3px;
+  filter: drop-shadow(0 0 2px #6c78d1);
+  z-index: 10000;
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(120vh) rotate(720deg);
+  }
+}
+   
