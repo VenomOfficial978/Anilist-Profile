@@ -101,7 +101,7 @@ window.addEventListener('scroll', () => {
 // ======================
 // 🔥 AniList LIVE PROFILE DATA
 // ======================
-const username = "Volthaar"; // Case-sensitive
+const username = "Volthaar";
 
 const query = `
 query ($name: String) {
@@ -156,9 +156,7 @@ query ($name: String) {
 }
 `;
 
-const variables = {
-  name: "Volthaar"
-};
+const variables = { name: username };
 
 fetch("https://graphql.anilist.co", {
   method: "POST",
@@ -166,36 +164,29 @@ fetch("https://graphql.anilist.co", {
     "Content-Type": "application/json",
     "Accept": "application/json"
   },
-  body: JSON.stringify({
-    query: query,
-    variables: variables
-  })
+  body: JSON.stringify({ query, variables })
 })
   .then(res => res.json())
   .then(data => {
     const user = data.data.User;
 
-    // Set avatar and username
     document.getElementById("anilist-avatar").innerHTML = `
       <img src="${user.avatar.large}" alt="${user.name}'s Avatar">
     `;
     document.getElementById("anilist-username").textContent = user.name;
 
-    // Anime stats
     document.getElementById("anime-stats").innerHTML = `
       ${user.statistics.anime.count} titles<br>
       ${user.statistics.anime.episodesWatched} episodes<br>
       ${user.statistics.anime.minutesWatched} minutes watched
     `;
 
-    // Manga stats
     document.getElementById("manga-stats").innerHTML = `
       ${user.statistics.manga.count} titles<br>
       ${user.statistics.manga.chaptersRead} chapters<br>
       ${user.statistics.manga.volumesRead} volumes read
     `;
 
-    // Currently Watching (Anime)
     const animeList = data.data.anime.lists.flatMap(list => list.entries);
     const watchingHTML = animeList.map(entry => `
       <div class="media-item">
@@ -205,7 +196,6 @@ fetch("https://graphql.anilist.co", {
     `).join('');
     document.getElementById("currently-watching").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
 
-    // Currently Reading (Manga)
     const mangaList = data.data.manga.lists.flatMap(list => list.entries);
     const readingHTML = mangaList.map(entry => `
       <div class="media-item">
@@ -218,3 +208,23 @@ fetch("https://graphql.anilist.co", {
   .catch(error => {
     console.error("Error fetching AniList data:", error);
   });
+
+// ======================
+// 🧭 TAB SWITCHING
+// ======================
+const tabButtons = document.querySelectorAll(".tab-button");
+const tabContents = document.querySelectorAll(".tab-content");
+
+tabButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const target = button.getAttribute("data-tab");
+
+    // Remove active classes
+    tabButtons.forEach(btn => btn.classList.remove("active"));
+    tabContents.forEach(content => content.classList.remove("active"));
+
+    // Add active to selected
+    button.classList.add("active");
+    document.getElementById(target).classList.add("active");
+  });
+});
