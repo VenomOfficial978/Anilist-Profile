@@ -588,3 +588,68 @@ body.light footer {
   white-space: nowrap;
   overflow: hidden;
 }
+
+.anilist-fancy {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: rgba(0,0,0,0.6);
+  border-radius: 1rem;
+  border: 2px solid #4fc3f7;
+  box-shadow: 0 0 20px rgba(79, 195, 247, 0.4);
+}
+
+.anilist-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.anilist-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar-section img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #4fc3f7;
+}
+
+.anilist-username {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-block {
+  background: rgba(255,255,255,0.05);
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  color: #e0f7fa;
+  border: 1px solid #4fc3f7;
+  box-shadow: 0 0 10px rgba(79,195,247,0.2);
+  min-width: 150px;
+  transition: transform 0.3s ease;
+}
+
+.stat-block:hover {
+  transform: scale(1.05);
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #4fc3f7;
+  margin-bottom: 1rem;
+}
