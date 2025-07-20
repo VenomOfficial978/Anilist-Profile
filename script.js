@@ -178,7 +178,7 @@ fetch("https://graphql.anilist.co", {
     </li>`).join('');
   document.getElementById("reading-manga-list").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
 
-  // Add event listeners for dynamic content
+  // Attach popup listeners AFTER DOM updated with media items
   attachPopupListeners();
 })
 .catch(err => {
@@ -186,49 +186,27 @@ fetch("https://graphql.anilist.co", {
 });
 
 // ======== TABS SWITCHING ========
-const tabs = document.querySelectorAll('.tab-btn');
-const contents = document.querySelectorAll('.tab-content');
-
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    const target = tab.getAttribute('data-tab');
-
-    tabs.forEach(t => t.classList.remove('active'));
-    contents.forEach(c => c.classList.remove('show'));
-
-    tab.classList.add('active');
-    const targetTab = document.getElementById(`tab-${target}`);
-    if (targetTab) {
-      targetTab.classList.add('show');
-    }
-  });
-});
-
-// Tabs switching logic
 const tabButtons = document.querySelectorAll(".tab-btn");
 const tabContents = document.querySelectorAll(".tab-content");
 
 tabButtons.forEach(button => {
   button.addEventListener("click", () => {
-    // Remove active from all buttons and hide all contents
     tabButtons.forEach(btn => btn.classList.remove("active"));
     tabContents.forEach(tc => tc.classList.remove("show"));
 
-    // Activate clicked button and show related tab content
     button.classList.add("active");
     const tabId = button.getAttribute("data-tab");
     document.getElementById("tab-" + tabId).classList.add("show");
   });
 });
 
-// Popup Modal Elements
+// ======== POPUP MODAL ========
 const popup = document.getElementById("media-popup");
 const popupImgContainer = popup.querySelector(".popup-image");
 const popupTitle = popup.querySelector(".popup-title");
 const popupDesc = popup.querySelector(".popup-desc");
 const closeBtn = popup.querySelector(".close-btn");
 
-// Attach popup to media items ONLY inside currently watching/reading tab
 function attachPopupListeners() {
   const watchingTab = document.getElementById("tab-watching");
   const mediaItems = watchingTab.querySelectorAll(".media-item");
@@ -248,17 +226,12 @@ function attachPopupListeners() {
   });
 }
 
-// Close popup on close button click
 closeBtn.addEventListener("click", () => {
   popup.classList.remove("show");
 });
 
-// Close popup on clicking outside content
 popup.addEventListener("click", (e) => {
   if (e.target === popup) {
     popup.classList.remove("show");
   }
 });
-
-// Initialize popup listeners (call this after dynamically injecting media items)
-attachPopupListeners();
