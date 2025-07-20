@@ -104,92 +104,92 @@ window.addEventListener('scroll', () => {
 const username = "Volthaar"; // 🔁 Replace with your AniList username (case-sensitive)
 
 const query = `
-query {
-  User(name: "${username}") {
-    name
-    avatar {
-      large
+  query {
+    User(name: "Volthaar") {
+      name
+      avatar {
+        large
+      }
+      favourites {
+        anime {
+          nodes {
+            title {
+              romaji
+            }
+            siteUrl
+            coverImage {
+              large
+            }
+          }
+        }
+      }
     }
-    favourites {
-      anime(first: 5) {
-        nodes {
-          title { romaji }
-          siteUrl
-          coverImage { large }
+    MediaListCollection(userName: "Volthaar", type: ANIME, status: CURRENT) {
+      lists {
+        entries {
+          media {
+            title {
+              romaji
+            }
+            siteUrl
+            coverImage {
+              large
+            }
+          }
         }
       }
     }
   }
-  MediaListCollection(userName: "${username}", type: ANIME, status: CURRENT) {
-    lists {
-      entries {
-        media {
-          title { romaji }
-          siteUrl
-          coverImage { large }
-        }
-      }
-    }
-  }
-}
 `;
 
-fetch('https://graphql.anilist.co', {
-  method: 'POST',
+fetch("https://graphql.anilist.co", {
+  method: "POST",
   headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    "Content-Type": "application/json",
+    "Accept": "application/json",
   },
-  body: JSON.stringify({ query })
+  body: JSON.stringify({ query }),
 })
-.then(res => res.json())
-.then(data => {
-  if (!data || !data.data) throw new Error("Invalid AniList data format");
+  .then((response) => response.json())
+  .then((data) => {
+    const user = data.data.User;
+    const mediaList = data.data.MediaListCollection.lists;
 
-  const user = data.data.User;
-  const watching = data.data.MediaListCollection.lists.flatMap(l => l.entries);
-  const favorites = user.favourites.anime.nodes;
+    // Set name and avatar
+    document.querySelector(".username").textContent = user.name;
+    document.querySelector(".pfp").src = user.avatar.large;
 
-  const avatarDiv = document.getElementById('anilist-avatar');
-  const currentDiv = document.getElementById('anilist-current');
-  const favoritesDiv = document.getElementById('anilist-favorites');
+    // Display top 5 favorites
+    const favoritesContainer = document.querySelector(".favorites");
+    const topFavorites = user.favourites.anime.nodes.slice(0, 5);
 
-  // 👤 Avatar & Username
-  avatarDiv.innerHTML = `
-    <img src="${user.avatar.large}" alt="${user.name}" class="avatar-img" />
-    <p class="username">@${user.name}</p>
-  `;
+    topFavorites.forEach((anime) => {
+      const favElement = document.createElement("a");
+      favElement.href = anime.siteUrl;
+      favElement.target = "_blank";
+      favElement.innerHTML = `
+        <img src="${anime.coverImage.large}" alt="${anime.title.romaji}" class="anime-cover" />
+        <span>${anime.title.romaji}</span>
+      `;
+      favoritesContainer.appendChild(favElement);
+    });
 
-  // 📺 Currently Watching
-  currentDiv.innerHTML = `
-    <h3>📺 Currently Watching</h3>
-    <ul class="anime-list">
-      ${watching.map(w => `
-        <li>
-          <a href="${w.media.siteUrl}" target="_blank">
-            <img src="${w.media.coverImage.large}" alt="${w.media.title.romaji}" />
-            <span>${w.media.title.romaji}</span>
-          </a>
-        </li>
-      `).join('')}
-    </ul>
-  `;
-
-  // 🔥 Favorites
-  favoritesDiv.innerHTML = `
-    <h3>🔥 Favorites</h3>
-    <ul class="anime-list">
-      ${favorites.map(f => `
-        <li>
-          <a href="${f.siteUrl}" target="_blank">
-            <img src="${f.coverImage.large}" alt="${f.title.romaji}" />
-            <span>${f.title.romaji}</span>
-          </a>
-        </li>
-      `).join('')}
-    </ul>
-  `;
-})
-.catch(err => {
-  console.error("AniList fetch error:", err);
-});
+    // Display currently watching
+    const watchingContainer = document.querySelector(".watching");
+    mediaList.forEach((list) => {
+      list.entries.forEach((entry) => {
+        const anime = entry.media;
+        const entryElement = document.createElement("a");
+        entryElement.href = anime.siteUrl;
+        entryElement.target = "_blank";
+        entryElement.innerHTML = `
+          <img src="${anime.coverImage.large}" alt="${anime.title.romaji}" class="anime-cover" />
+          <span>${anime.title.romaji}</span>
+        `;
+        watchingContainer.appendChild(entryElement);
+      });
+    });
+  })
+  .catch((error) => {
+    console.error("AniList API error:", error);
+  });
