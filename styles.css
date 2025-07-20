@@ -730,3 +730,15 @@ body.light footer {
   color: var(--accent);
   text-decoration: none;
   }
+
+.tab-content {
+  display: none;
+}
+.tab-content.show {
+  display: block;
+}
+.tab-btn.active {
+  /* Your active button styles */
+  font-weight: bold;
+  border-bottom: 2px solid #fff;
+  }
