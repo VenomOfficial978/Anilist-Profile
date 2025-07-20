@@ -101,103 +101,95 @@ window.addEventListener('scroll', () => {
 // ======================
 // 🔥 AniList LIVE PROFILE DATA
 // ======================
-const username = "Volthaar"; // EXACT AniList username (case-sensitive)
+            const username = "Volthaar"; // 👈 Replace with your AniList username
 
 const query = `
-query {
-  User(name: "${username}") {
-    name
-    avatar {
-      large
-    }
-    favourites {
-      anime {
-        nodes {
-          title {
-            romaji
-          }
-          siteUrl
-          coverImage {
-            large
-          }
+  query ($name: String) {
+    User(name: $name) {
+      name
+      avatar {
+        large
+      }
+      statistics {
+        anime {
+          count
+          episodesWatched
+          minutesWatched
+          meanScore
+        }
+        manga {
+          count
+          chaptersRead
+          volumesRead
+          meanScore
         }
       }
     }
   }
-  MediaListCollection(userName: "${username}", type: ANIME, status: CURRENT) {
-    lists {
-      entries {
-        media {
-          title {
-            romaji
-          }
-          siteUrl
-          coverImage {
-            large
-          }
-        }
-      }
-    }
-  }
-}
 `;
 
-fetch('https://graphql.anilist.co', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  },
-  body: JSON.stringify({ query }),
-})
-  .then(res => res.json())
-  .then(data => {
-    if (!data || !data.data) throw new Error("Invalid AniList data format");
+const variables = {
+  name: username
+};
 
-    const user = data.data.User;
-    const watching = data.data.MediaListCollection.lists.flatMap(list => list.entries);
-    const favorites = user.favourites.anime.nodes;
+const url = "https://graphql.anilist.co";
 
-    const avatarDiv = document.getElementById('anilist-avatar');
-    const currentDiv = document.getElementById('anilist-current');
-    const favoritesDiv = document.getElementById('anilist-favorites');
-
-    // Avatar & username
-    avatarDiv.innerHTML = `
-      <img src="${user.avatar.large}" alt="${user.name}" class="avatar-img" />
-      <p class="username">@${user.name}</p>
-    `;
-
-    // Currently watching list
-    currentDiv.innerHTML = `
-      <h3>📺 Currently Watching</h3>
-      <ul class="anime-list">
-        ${watching.map(w => `
-          <li>
-            <a href="${w.media.siteUrl}" target="_blank" rel="noopener noreferrer">
-              <img src="${w.media.coverImage.large}" alt="${w.media.title.romaji}" />
-              <span>${w.media.title.romaji}</span>
-            </a>
-          </li>
-        `).join('')}
-      </ul>
-    `;
-
-    // Favorites list
-    favoritesDiv.innerHTML = `
-      <h3>🔥 Favorites</h3>
-      <ul class="anime-list">
-        ${favorites.map(f => `
-          <li>
-            <a href="${f.siteUrl}" target="_blank" rel="noopener noreferrer">
-              <img src="${f.coverImage.large}" alt="${f.title.romaji}" />
-              <span>${f.title.romaji}</span>
-            </a>
-          </li>
-        `).join('')}
-      </ul>
-    `;
+function fetchAniListData() {
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify({
+      query,
+      variables
+    })
   })
-  .catch(err => {
-    console.error("AniList fetch error:", err);
-  });
+    .then(res => res.json())
+    .then(renderAniListData)
+    .catch(err => {
+      console.error("AniList Fetch Error:", err);
+      document.getElementById("anilist-avatar").innerHTML = `<p>Failed to load AniList data.</p>`;
+    });
+}
+
+function renderAniListData(data) {
+  const user = data.data.User;
+
+  // Avatar and Username
+  const avatarDiv = document.getElementById("anilist-avatar");
+  avatarDiv.innerHTML = `
+    <img src="${user.avatar.large}" alt="${user.name}'s Avatar" class="anilist-avatar">
+    <h3>${user.name}</h3>
+  `;
+
+  // Anime Stats
+  const animeStats = user.statistics.anime;
+  const animeDiv = document.getElementById("anilist-current");
+  animeDiv.innerHTML = `
+    <h3>Anime Stats</h3>
+    <ul>
+      <li><strong>Total Anime:</strong> ${animeStats.count}</li>
+      <li><strong>Episodes Watched:</strong> ${animeStats.episodesWatched}</li>
+      <li><strong>Minutes Watched:</strong> ${animeStats.minutesWatched}</li>
+      <li><strong>Mean Score:</strong> ${animeStats.meanScore.toFixed(2)}</li>
+    </ul>
+  `;
+
+  // Manga Stats
+  const mangaStats = user.statistics.manga;
+  const mangaDiv = document.getElementById("anilist-favorites");
+  mangaDiv.innerHTML = `
+    <h3>Manga Stats</h3>
+    <ul>
+      <li><strong>Total Manga:</strong> ${mangaStats.count}</li>
+      <li><strong>Chapters Read:</strong> ${mangaStats.chaptersRead}</li>
+      <li><strong>Volumes Read:</strong> ${mangaStats.volumesRead}</li>
+      <li><strong>Mean Score:</strong> ${mangaStats.meanScore.toFixed(2)}</li>
+    </ul>
+  `;
+}
+
+// Fetch the data on page load
+window.addEventListener("DOMContentLoaded", fetchAniListData);
