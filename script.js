@@ -233,3 +233,30 @@ modal.addEventListener('click', (e) => {
     modal.classList.remove('show');
   }
 });
+
+// Handle popup display
+const popup = document.getElementById("media-popup");
+const popupImgContainer = popup.querySelector(".popup-image");
+const popupTitle = popup.querySelector(".popup-title");
+const popupDesc = popup.querySelector(".popup-desc");
+const closeBtn = popup.querySelector(".close-btn");
+
+document.querySelectorAll(".media-list").forEach(list => {
+  list.addEventListener("click", (e) => {
+    const item = e.target.closest("li");
+    if (!item) return;
+
+    const title = item.getAttribute("data-title") || "Unknown Title";
+    const desc = item.getAttribute("data-desc") || "No description available.";
+    const imgSrc = item.querySelector("img")?.src;
+
+    popupImgContainer.innerHTML = `<img src="${imgSrc}" alt="${title}" />`;
+    popupTitle.textContent = title;
+    popupDesc.textContent = desc;
+    popup.classList.add("show");
+  });
+});
+
+closeBtn.addEventListener("click", () => {
+  popup.classList.remove("show");
+});
