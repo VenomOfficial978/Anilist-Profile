@@ -155,27 +155,21 @@ fetch("https://graphql.anilist.co", {
     document.getElementById("anime-stats").innerHTML = `${user.statistics.anime.count} titles<br>${user.statistics.anime.episodesWatched} episodes<br>${user.statistics.anime.minutesWatched} minutes watched`;
     document.getElementById("manga-stats").innerHTML = `${user.statistics.manga.count} titles<br>${user.statistics.manga.chaptersRead} chapters<br>${user.statistics.manga.volumesRead} volumes read`;
 
-    // Currently Watching Anime List
-    const animeList = data.data.anime.lists.flatMap(list => list.entries);
-    const watchingHTML = animeList.map(entry => `
-      <li class="media-item">
-        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" />
-        <span>${entry.media.title.romaji}</span>
-      </li>
-    `).join('');
-    document.getElementById("watching-anime-list").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
+    // Currently Watching Anime List - show only covers
+const watchingHTML = animeList.map(entry => `
+  <li class="media-item">
+    <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
+  </li>
+`).join('');
+document.getElementById("watching-anime-list").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
 
-    // Currently Reading Manga List
-    const mangaList = data.data.manga.lists.flatMap(list => list.entries);
-    const readingHTML = mangaList.map(entry => `
-      <li class="media-item">
-        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" />
-        <span>${entry.media.title.romaji}</span>
-      </li>
-    `).join('');
-    document.getElementById("reading-manga-list").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
-  })
-  .catch(err => console.error("AniList fetch error:", err));
+// Currently Reading Manga List - show only covers
+const readingHTML = mangaList.map(entry => `
+  <li class="media-item">
+    <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
+  </li>
+`).join('');
+document.getElementById("reading-manga-list").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
 
 // ======== TABS SWITCHING ========
 const tabs = document.querySelectorAll('.tab-btn');
