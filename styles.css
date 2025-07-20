@@ -1039,15 +1039,20 @@ button:hover {
 
 .popup {
   display: none;
-  position: absolute; /* floats next to clicked item */
-  z-index: 9999;
+  position: fixed;        /* LOCKS popup in center of screen */
+  top: 50%;
+  left: 50%;
+  width: 320px;           /* fixed width */
+  height: 320px;          /* fixed height to keep it square */
+  transform: translate(-50%, -50%); /* center alignment */
   background-color: #1e1e2f;
   padding: 20px;
   border-radius: 12px;
-  max-width: 320px;
   color: #fff;
   box-shadow: 0 0 15px rgba(255,255,255,0.1);
   animation: fadeIn 0.3s ease-in-out;
+  overflow: auto;         /* scroll if content is too tall */
+  z-index: 9999;
 }
 
 .popup.show {
@@ -1056,13 +1061,16 @@ button:hover {
 
 .popup-content img {
   width: 100%;
+  max-height: 120px;      /* keep the image height controlled */
+  object-fit: contain;
   border-radius: 8px;
   margin-bottom: 12px;
 }
 
 .close-btn {
   position: absolute;
-  top: 8px; right: 12px;
+  top: 8px;
+  right: 12px;
   font-size: 20px;
   cursor: pointer;
   color: #fff;
@@ -1076,4 +1084,4 @@ button:hover {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
-}
+  }
