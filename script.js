@@ -101,95 +101,66 @@ window.addEventListener('scroll', () => {
 // ======================
 // 🔥 AniList LIVE PROFILE DATA
 // ======================
-            const username = "Volthaar"; // 👈 Replace with your AniList username
+                  const username = "Volthaar"; // Case-sensitive
 
 const query = `
-  query ($name: String) {
-    User(name: $name) {
-      name
-      avatar {
-        large
+query ($name: String) {
+  User(name: $name) {
+    name
+    avatar {
+      large
+    }
+    statistics {
+      anime {
+        count
+        episodesWatched
+        minutesWatched
       }
-      statistics {
-        anime {
-          count
-          episodesWatched
-          minutesWatched
-          meanScore
-        }
-        manga {
-          count
-          chaptersRead
-          volumesRead
-          meanScore
-        }
+      manga {
+        count
+        chaptersRead
+        volumesRead
       }
     }
   }
+}
 `;
 
-const variables = {
-  name: username
-};
+fetch("https://graphql.anilist.co", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+  },
+  body: JSON.stringify({
+    query: query,
+    variables: { name: username },
+  }),
+})
+  .then(res => res.json())
+  .then(data => {
+    const user = data.data.User;
 
-const url = "https://graphql.anilist.co";
+    // Avatar & Username
+    document.getElementById("anilist-avatar").innerHTML = `
+      <img src="${user.avatar.large}" alt="${user.name}'s Avatar">
+    `;
+    document.getElementById("anilist-username").textContent = user.name;
 
-function fetchAniListData() {
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    },
-    body: JSON.stringify({
-      query,
-      variables
-    })
+    // Anime Stats
+    document.getElementById("anime-stats").innerHTML = `
+      ${user.statistics.anime.count} titles<br>
+      ${user.statistics.anime.episodesWatched} episodes<br>
+      ${user.statistics.anime.minutesWatched} mins watched
+    `;
+
+    // Manga Stats
+    document.getElementById("manga-stats").innerHTML = `
+      ${user.statistics.manga.count} titles<br>
+      ${user.statistics.manga.chaptersRead} chapters<br>
+      ${user.statistics.manga.volumesRead} volumes read
+    `;
   })
-    .then(res => res.json())
-    .then(renderAniListData)
-    .catch(err => {
-      console.error("AniList Fetch Error:", err);
-      document.getElementById("anilist-avatar").innerHTML = `<p>Failed to load AniList data.</p>`;
-    });
-}
-
-function renderAniListData(data) {
-  const user = data.data.User;
-
-  // Avatar and Username
-  const avatarDiv = document.getElementById("anilist-avatar");
-  avatarDiv.innerHTML = `
-    <img src="${user.avatar.large}" alt="${user.name}'s Avatar" class="anilist-avatar">
-    <h3>${user.name}</h3>
-  `;
-
-  // Anime Stats
-  const animeStats = user.statistics.anime;
-  const animeDiv = document.getElementById("anilist-current");
-  animeDiv.innerHTML = `
-    <h3>Anime Stats</h3>
-    <ul>
-      <li><strong>Total Anime:</strong> ${animeStats.count}</li>
-      <li><strong>Episodes Watched:</strong> ${animeStats.episodesWatched}</li>
-      <li><strong>Minutes Watched:</strong> ${animeStats.minutesWatched}</li>
-      <li><strong>Mean Score:</strong> ${animeStats.meanScore.toFixed(2)}</li>
-    </ul>
-  `;
-
-  // Manga Stats
-  const mangaStats = user.statistics.manga;
-  const mangaDiv = document.getElementById("anilist-favorites");
-  mangaDiv.innerHTML = `
-    <h3>Manga Stats</h3>
-    <ul>
-      <li><strong>Total Manga:</strong> ${mangaStats.count}</li>
-      <li><strong>Chapters Read:</strong> ${mangaStats.chaptersRead}</li>
-      <li><strong>Volumes Read:</strong> ${mangaStats.volumesRead}</li>
-      <li><strong>Mean Score:</strong> ${mangaStats.meanScore.toFixed(2)}</li>
-    </ul>
-  `;
-}
-
-// Fetch the data on page load
-window.addEventListener("DOMContentLoaded", fetchAniListData);
+  .catch(err => {
+    console.error("AniList Fetch Error:", err);
+  });
