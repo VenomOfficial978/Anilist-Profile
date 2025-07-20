@@ -692,6 +692,29 @@ body.light footer {
   box-shadow: 0 0 20px var(--light-blue);
 }
 
+.media-list {
+  display: flex;
+  flex-wrap: wrap;         /* let covers wrap to next line if needed */
+  gap: 12px;               /* space between covers */
+  overflow-x: auto;        /* horizontal scroll if too many */
+  padding: 8px 0;
+  list-style: none;
+  margin: 0;
+}
+
+.media-item {
+  flex: 0 0 calc(25% - 12px); /* 4 covers per row minus gaps */
+  max-width: calc(25% - 12px);
+  box-sizing: border-box;
+}
+
+@media (max-width: 800px) {
+  .media-item {
+    flex: 0 0 calc(33.33% - 12px); /* 3 covers per row on smaller screens */
+    max-width: calc(33.33% - 12px);
+  }
+}
+
 /* Info Boxes */
 .info-box {
   background-color: var(--card-bg-dark);
