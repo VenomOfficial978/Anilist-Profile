@@ -1,7 +1,4 @@
-<script>
-// ======================
-// 🌙 THEME TOGGLE BUTTON
-// ======================
+// ======== THEME TOGGLE BUTTON ========
 const toggleBtn = document.querySelector('.toggle-btn');
 const body = document.body;
 
@@ -25,37 +22,29 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// ======================
-// 🗁 CUSTOM CURSOR
-// ======================
+// ======== CUSTOM CURSOR ========
 const cursor = document.querySelector('.cursor');
 window.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top = e.clientY + 'px';
 });
 
-// ======================
-// ✨ PARTICLE ANIMATION
-// ======================
+// ======== PARTICLES ========
 const particlesContainer = document.getElementById('particles');
 const particleCount = 30;
 
 function createParticle() {
   const particle = document.createElement('div');
   particle.classList.add('particle');
-
   const size = Math.random() * 6 + 4;
   particle.style.width = `${size}px`;
   particle.style.height = `${size}px`;
   particle.style.left = `${Math.random() * window.innerWidth}px`;
   particle.style.top = `${window.innerHeight + size}px`;
-
   const duration = Math.random() * 7 + 8;
   particle.style.animationDuration = `${duration}s`;
   particle.style.animationDelay = `${Math.random() * duration}s`;
-
   particlesContainer.appendChild(particle);
-
   particle.addEventListener('animationend', () => {
     particle.remove();
     createParticle();
@@ -66,18 +55,14 @@ for (let i = 0; i < particleCount; i++) {
   createParticle();
 }
 
-// ======================
-// 🚫 PREVENT TEXT SELECT OUTSIDE BIO
-// ======================
+// ======== PREVENT TEXT SELECT OUTSIDE BIO ========
 document.body.addEventListener('mousedown', (e) => {
   if (!e.target.closest('.bio-block')) {
     e.preventDefault();
   }
 });
 
-// ======================
-// 🎝️ STAGGERED BIO ANIMATION
-// ======================
+// ======== BIO TEXT ANIMATION ========
 function animateBioText() {
   const bioParagraphs = document.querySelectorAll('.bio-block p:not(.animate)');
   bioParagraphs.forEach((p, i) => {
@@ -99,10 +84,8 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// ======================
-// 🔥 AniList LIVE PROFILE DATA
-// ======================
-const username = "Volthaar";
+// ======== AniList LIVE DATA ========
+const username = "Volthaar"; // change to your AniList username
 
 const query = `
 query ($name: String) {
@@ -124,7 +107,6 @@ query ($name: String) {
       }
     }
   }
-
   anime: MediaListCollection(userName: $name, type: ANIME, status: CURRENT) {
     lists {
       entries {
@@ -139,7 +121,6 @@ query ($name: String) {
       }
     }
   }
-
   manga: MediaListCollection(userName: $name, type: MANGA, status: CURRENT) {
     lists {
       entries {
@@ -159,81 +140,57 @@ query ($name: String) {
 
 fetch("https://graphql.anilist.co", {
   method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Accept": "application/json"
-  },
-  body: JSON.stringify({
-    query,
-    variables: { name: username }
+  headers: { "Content-Type": "application/json", "Accept": "application/json" },
+  body: JSON.stringify({ query, variables: { name: username } }),
+})
+  .then(res => res.json())
+  .then(data => {
+    const user = data.data.User;
+
+    // Avatar & username
+    document.getElementById("anilist-avatar").innerHTML = `<img src="${user.avatar.large}" alt="${user.name}'s Avatar">`;
+    document.getElementById("anilist-username").textContent = user.name;
+
+    // Stats
+    document.getElementById("anime-stats").innerHTML = `${user.statistics.anime.count} titles<br>${user.statistics.anime.episodesWatched} episodes<br>${user.statistics.anime.minutesWatched} minutes watched`;
+    document.getElementById("manga-stats").innerHTML = `${user.statistics.manga.count} titles<br>${user.statistics.manga.chaptersRead} chapters<br>${user.statistics.manga.volumesRead} volumes read`;
+
+    // Currently Watching Anime List
+    const animeList = data.data.anime.lists.flatMap(list => list.entries);
+    const watchingHTML = animeList.map(entry => `
+      <li class="media-item">
+        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" />
+        <span>${entry.media.title.romaji}</span>
+      </li>
+    `).join('');
+    document.getElementById("watching-anime-list").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
+
+    // Currently Reading Manga List
+    const mangaList = data.data.manga.lists.flatMap(list => list.entries);
+    const readingHTML = mangaList.map(entry => `
+      <li class="media-item">
+        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" />
+        <span>${entry.media.title.romaji}</span>
+      </li>
+    `).join('');
+    document.getElementById("reading-manga-list").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
   })
-})
-.then(res => res.json())
-.then(data => {
-  const user = data.data.User;
+  .catch(err => console.error("AniList fetch error:", err));
 
-  // Set avatar and username
-  document.getElementById("anilist-avatar").innerHTML = `
-    <img src="${user.avatar.large}" alt="${user.name}'s Avatar">
-  `;
-  document.getElementById("anilist-username").textContent = user.name;
+// ======== TABS SWITCHING ========
+const tabs = document.querySelectorAll('.tab-btn');
+const contents = document.querySelectorAll('.tab-content');
 
-  // Anime stats
-  document.getElementById("anime-stats").innerHTML = `
-    ${user.statistics.anime.count} titles<br>
-    ${user.statistics.anime.episodesWatched} episodes<br>
-    ${user.statistics.anime.minutesWatched} minutes watched
-  `;
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.getAttribute('data-tab');
 
-  // Manga stats
-  document.getElementById("manga-stats").innerHTML = `
-    ${user.statistics.manga.count} titles<br>
-    ${user.statistics.manga.chaptersRead} chapters<br>
-    ${user.statistics.manga.volumesRead} volumes read
-  `;
+    // Remove active/show classes
+    tabs.forEach(t => t.classList.remove('active'));
+    contents.forEach(c => c.classList.remove('show'));
 
-  // Currently Watching
-  const animeList = data.data.anime.lists.flatMap(list => list.entries);
-  const watchingHTML = animeList.map(entry => `
-    <div class="media-item">
-      <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}">
-      <span>${entry.media.title.romaji}</span>
-    </div>
-  `).join('');
-  document.getElementById("currently-watching").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
-
-  // Currently Reading
-  const mangaList = data.data.manga.lists.flatMap(list => list.entries);
-  const readingHTML = mangaList.map(entry => `
-    <div class="media-item">
-      <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}">
-      <span>${entry.media.title.romaji}</span>
-    </div>
-  `).join('');
-  document.getElementById("currently-reading").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
-})
-.catch(error => {
-  console.error("Error fetching AniList data:", error);
-});
-
-// ======================
-// 📁 TAB SWITCHING LOGIC
-// ======================
-const tabButtons = document.querySelectorAll(".tab-button");
-const tabContents = document.querySelectorAll(".tab-content");
-
-tabButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    const target = button.getAttribute("data-tab");
-
-    // Remove active from all buttons
-    tabButtons.forEach(btn => btn.classList.remove("active"));
-    // Hide all content
-    tabContents.forEach(content => content.classList.remove("active"));
-
-    // Activate selected
-    button.classList.add("active");
-    document.getElementById(target).classList.add("active");
+    // Add active/show to clicked
+    tab.classList.add('active');
+    document.getElementById(`tab-${target}`).classList.add('show');
   });
 });
-</script>
