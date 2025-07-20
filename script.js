@@ -1,3 +1,4 @@
+<script>
 // ======================
 // 🌙 THEME TOGGLE BUTTON
 // ======================
@@ -156,61 +157,67 @@ query ($name: String) {
 }
 `;
 
-const variables = { name: username };
-
 fetch("https://graphql.anilist.co", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json"
   },
-  body: JSON.stringify({ query, variables })
-})
-  .then(res => res.json())
-  .then(data => {
-    const user = data.data.User;
-
-    document.getElementById("anilist-avatar").innerHTML = `
-      <img src="${user.avatar.large}" alt="${user.name}'s Avatar">
-    `;
-    document.getElementById("anilist-username").textContent = user.name;
-
-    document.getElementById("anime-stats").innerHTML = `
-      ${user.statistics.anime.count} titles<br>
-      ${user.statistics.anime.episodesWatched} episodes<br>
-      ${user.statistics.anime.minutesWatched} minutes watched
-    `;
-
-    document.getElementById("manga-stats").innerHTML = `
-      ${user.statistics.manga.count} titles<br>
-      ${user.statistics.manga.chaptersRead} chapters<br>
-      ${user.statistics.manga.volumesRead} volumes read
-    `;
-
-    const animeList = data.data.anime.lists.flatMap(list => list.entries);
-    const watchingHTML = animeList.map(entry => `
-      <div class="media-item">
-        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}">
-        <span>${entry.media.title.romaji}</span>
-      </div>
-    `).join('');
-    document.getElementById("currently-watching").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
-
-    const mangaList = data.data.manga.lists.flatMap(list => list.entries);
-    const readingHTML = mangaList.map(entry => `
-      <div class="media-item">
-        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}">
-        <span>${entry.media.title.romaji}</span>
-      </div>
-    `).join('');
-    document.getElementById("currently-reading").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
+  body: JSON.stringify({
+    query,
+    variables: { name: username }
   })
-  .catch(error => {
-    console.error("Error fetching AniList data:", error);
-  });
+})
+.then(res => res.json())
+.then(data => {
+  const user = data.data.User;
+
+  // Set avatar and username
+  document.getElementById("anilist-avatar").innerHTML = `
+    <img src="${user.avatar.large}" alt="${user.name}'s Avatar">
+  `;
+  document.getElementById("anilist-username").textContent = user.name;
+
+  // Anime stats
+  document.getElementById("anime-stats").innerHTML = `
+    ${user.statistics.anime.count} titles<br>
+    ${user.statistics.anime.episodesWatched} episodes<br>
+    ${user.statistics.anime.minutesWatched} minutes watched
+  `;
+
+  // Manga stats
+  document.getElementById("manga-stats").innerHTML = `
+    ${user.statistics.manga.count} titles<br>
+    ${user.statistics.manga.chaptersRead} chapters<br>
+    ${user.statistics.manga.volumesRead} volumes read
+  `;
+
+  // Currently Watching
+  const animeList = data.data.anime.lists.flatMap(list => list.entries);
+  const watchingHTML = animeList.map(entry => `
+    <div class="media-item">
+      <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}">
+      <span>${entry.media.title.romaji}</span>
+    </div>
+  `).join('');
+  document.getElementById("currently-watching").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
+
+  // Currently Reading
+  const mangaList = data.data.manga.lists.flatMap(list => list.entries);
+  const readingHTML = mangaList.map(entry => `
+    <div class="media-item">
+      <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}">
+      <span>${entry.media.title.romaji}</span>
+    </div>
+  `).join('');
+  document.getElementById("currently-reading").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
+})
+.catch(error => {
+  console.error("Error fetching AniList data:", error);
+});
 
 // ======================
-// 🧭 TAB SWITCHING
+// 📁 TAB SWITCHING LOGIC
 // ======================
 const tabButtons = document.querySelectorAll(".tab-button");
 const tabContents = document.querySelectorAll(".tab-content");
@@ -219,12 +226,14 @@ tabButtons.forEach(button => {
   button.addEventListener("click", () => {
     const target = button.getAttribute("data-tab");
 
-    // Remove active classes
+    // Remove active from all buttons
     tabButtons.forEach(btn => btn.classList.remove("active"));
+    // Hide all content
     tabContents.forEach(content => content.classList.remove("active"));
 
-    // Add active to selected
+    // Activate selected
     button.classList.add("active");
     document.getElementById(target).classList.add("active");
   });
 });
+</script>
