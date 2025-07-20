@@ -16,52 +16,101 @@
       <h1 class="fade-in">Welcome to My World</h1>
     </header>
 
-    <!-- TAB NAVIGATION -->
-    <nav class="tab-nav">
+    <!-- 🌟 Tabs Navigation -->
+    <nav class="tabs-nav">
       <button class="tab-btn active" data-tab="bio">Bio</button>
       <button class="tab-btn" data-tab="stats">Stats</button>
       <button class="tab-btn" data-tab="watching">Currently Watching/Reading</button>
       <button class="tab-btn" data-tab="credits">Credits</button>
     </nav>
 
-    <!-- BIO SECTION -->
-    <section id="bio" class="tab-content active">
-      <div class="anilist-bio">
-        <img src="https://i.postimg.cc/W4hvMHYM/wp2661631.jpg" alt="Top Image" class="top-img" />
-
-        <div class="quote glitch" data-text="“I am the echo in empty rooms  the silence after my last message.”">
-          “I am the echo in empty rooms<br>the silence after my last message.”
+    <!-- 🌟 TAB: BIO -->
+    <section id="tab-bio" class="tab-content show">
+      <div class="bio-container fade-in-delay">
+        <div class="quote glitch" data-text="I am the echo in empty rooms the silence after my last message.">
+          “I am the echo in empty rooms<br />the silence after my last message.”
         </div>
 
-        <div class="bio-block">
-          <img src="https://cdn.pfps.gg/banners/6809-sad-anime.png" alt="Inner Image" class="inner-img" />
+        <div class="bio-block scroll-animate">
+          <img
+            src="https://cdn.pfps.gg/banners/6809-sad-anime.png"
+            class="inner-img"
+            alt="Sad Anime Banner"
+          />
 
-          <p>I once bought new notebooks. Thought I’d fill them with poems and plans. They’re still blank. I sleep beside them sometimes as if they’ll write my healing for me.</p>
-          <p class="alt">I made a playlist called <b>“better days.”</b> It stops at track three. I haven’t pressed play in months. Some songs are too honest.</p>
-          <p>I promised I’d visit. Said we’d laugh till sunrise, like we used to. But I kept choosing sleep over people, distance over effort. I let the silence win.</p>
-          <p class="alt">I typed out a message three paragraphs long. It said everything. I backspaced it all. No one needs to carry my chaos.</p>
-          <p>I told them I was catching up on shows, writing again. But the truth? I just laid there, staring at the ceiling cracks, connecting them like constellations of failure.</p>
-          <p class="alt italic">I keep telling myself I’ll come back to the people, the dreams, the version of me I abandoned. But most nights, I just scroll and pretend I’m okay with fading quietly.</p>
+          <p>
+            I once bought new notebooks. Thought I’d fill them with poems and
+            plans. They’re still blank. I sleep beside them sometimes as if they’ll
+            write my healing for me.
+          </p>
 
-          <img src="https://i.postimg.cc/CxVpTWS0/d8qxrqz-1dacb17b-995f-4131-b82f-c9f123d4976f.png" alt="Inner Image 2" class="inner-img" />
+          <p class="alt">
+            I made a playlist called <b>“better days.”</b> It stops at track three.
+            I haven’t pressed play in months. Some songs are too honest.
+          </p>
+
+          <p>
+            I promised I’d visit. Said we’d laugh till sunrise, like we used to.
+            But I kept choosing sleep over people, distance over effort. I let the
+            silence win.
+          </p>
+
+          <p class="alt">
+            I typed out a message three paragraphs long. It said everything. I
+            backspaced it all. No one needs to carry my chaos.
+          </p>
+
+          <p>
+            I told them I was catching up on shows, writing again. But the truth?
+            I just laid there, staring at the ceiling cracks, connecting them like
+            constellations of failure.
+          </p>
+
+          <p class="alt">
+            Every unread message is an anchor. Every paused episode, a moment I’ll
+            never live again. Grief isn't always loud. Sometimes it’s just
+            stillness.
+          </p>
+
+          <p class="alt italic">
+            I keep telling myself I’ll come back to the people, the dreams, the
+            version of me I abandoned. But most nights, I just scroll and pretend
+            I’m okay with fading quietly.
+          </p>
+
+          <img
+            src="https://i.postimg.cc/CxVpTWS0/d8qxrqz-1dacb17b-995f-4131-b82f-c9f123d4976f.png"
+            class="inner-img"
+            alt="Inner Image"
+          />
         </div>
 
-        <div class="quote small">“Maybe in another life,<br>I stayed.<br>I pressed send.<br>I healed.<br>Here, I am just disappearing.”</div>
-
-        <div class="footer-text">
-          Notebooks are tombstones of things I never said. Playlists are eulogies for who I used to be. Messages are confessions I couldn’t deliver. Silence is my cruelest companion. Memories are ghosts I sleep beside.
+        <div class="quote small scroll-animate glitch" data-text="Maybe in another life, I stayed. I pressed send. I healed. Here, I am just disappearing.">
+          “Maybe in another life,<br />I stayed.<br />I pressed send.<br />I healed.<br />Here,
+          I am just disappearing.”
         </div>
 
-        <div class="quote tiny">
-          I whispered to the night “stay” but it turned its back, and I was alone again.
+        <div class="footer-text scroll-animate">
+          Notebooks are tombstones of things I never said. Playlists are eulogies
+          for who I used to be. Messages are confessions I couldn’t deliver.
+          Silence is my cruelest companion. Memories are ghosts I sleep beside.
         </div>
 
-        <img src="https://wallpapercave.com/wp/wp6081521.jpg" alt="Bottom Image" class="bottom-img" />
+        <div class="quote tiny scroll-animate">
+          I whispered to the night “stay” but it turned its back, and I was alone
+          again.
+        </div>
+
+        <img
+          src="https://wallpapercave.com/wp/wp6081521.jpg"
+          class="bottom-img fade-in"
+          alt="Bottom Image"
+        />
       </div>
     </section>
 
-    <!-- STATS SECTION -->
-    <section id="stats" class="tab-content">
+    <!-- 🌟 TAB: STATS -->
+    <section id="tab-stats" class="tab-content">
       <section id="anilist-section" class="anilist-fancy fade-in-delay">
         <h2 class="section-title">My AniList Presence</h2>
         <div class="anilist-card">
@@ -83,14 +132,21 @@
       </section>
     </section>
 
-    <!-- WATCHING/READING SECTION -->
-    <section id="watching" class="tab-content">
-      <p>Currently watching and reading section coming soon...</p>
+    <!-- 🌟 TAB: CURRENT WATCHING/READING -->
+    <section id="tab-watching" class="tab-content">
+      <div class="content-placeholder">
+        <h2>Currently Watching / Reading</h2>
+        <p>This section is under construction 🚧. Stay tuned!</p>
+      </div>
     </section>
 
-    <!-- CREDITS SECTION -->
-    <section id="credits" class="tab-content">
-      <p>Credits go here. Designed by Echo's shadow 😎</p>
+    <!-- 🌟 TAB: CREDITS -->
+    <section id="tab-credits" class="tab-content">
+      <div class="content-placeholder">
+        <h2>Credits</h2>
+        <p>Designed by Echo. Coded with shadow & silence.</p>
+        <p>Special thanks to the void... and coffee.</p>
+      </div>
     </section>
   </main>
 
