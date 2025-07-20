@@ -865,3 +865,57 @@ button:hover {
     transform: translateY(0);
   }
 }
+
+/* ======== CREDITS STYLING ======== */
+.credits-container {
+  background: linear-gradient(to right, #141e30, #243b55);
+  border-radius: 15px;
+  padding: 2rem;
+  color: #eee;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 1s ease-in-out;
+  text-align: center;
+}
+
+.credits-container h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #ffcc70;
+  text-shadow: 1px 1px 3px #000;
+}
+
+.credits-container p {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.credit-link {
+  color: #7dcfff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.credit-link:hover {
+  color: #ffcc70;
+  text-decoration: underline;
+}
+
+.credit-name {
+  font-weight: bold;
+  color: #00ffa1;
+  text-shadow: 0 0 5px #00ffa1;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
