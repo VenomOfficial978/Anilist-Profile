@@ -742,3 +742,40 @@ body.light footer {
   font-weight: bold;
   border-bottom: 2px solid #fff;
   }
+
+.media-list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto; /* horizontal scroll if too many */
+  padding: 8px 0;
+  list-style: none;
+  margin: 0;
+}
+
+.media-item {
+  flex: 0 0 calc(25% - 12px); /* 4 items per row with gap */
+  max-width: calc(25% - 12px);
+  box-sizing: border-box;
+}
+
+@media (max-width: 800px) {
+  .media-item {
+    flex: 0 0 calc(33.33% - 12px); /* 3 items per row on smaller screens */
+    max-width: calc(33.33% - 12px);
+  }
+}
+
+.media-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.media-item img:hover {
+  transform: scale(1.05);
+}
+
