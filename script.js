@@ -198,3 +198,38 @@ tabs.forEach(tab => {
     }
   });
 });
+
+// ======== COVER POPUP MODAL ========
+const mediaItems = document.querySelectorAll('.media-item img');
+
+// Create modal container
+const modal = document.createElement('div');
+modal.classList.add('media-modal');
+modal.innerHTML = `
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h3 id="modal-title"></h3>
+  </div>
+`;
+document.body.appendChild(modal);
+
+// Event listeners for each cover
+mediaItems.forEach(img => {
+  img.addEventListener('click', () => {
+    const title = img.getAttribute('alt') || "No title";
+    document.getElementById('modal-title').textContent = title;
+    modal.classList.add('show');
+  });
+});
+
+// Close button
+modal.querySelector('.close-btn').addEventListener('click', () => {
+  modal.classList.remove('show');
+});
+
+// Close when clicking outside modal
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.classList.remove('show');
+  }
+});
