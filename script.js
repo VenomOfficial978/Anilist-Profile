@@ -214,6 +214,8 @@ const closeBtn = popup.querySelector(".close-btn");
 function attachPopupListeners() {
   document.querySelectorAll(".media-item").forEach(item => {
     item.addEventListener("click", (e) => {
+      e.stopPropagation();
+
       const title = item.getAttribute("data-title") || "Unknown Title";
       const desc = item.getAttribute("data-desc") || "No description available.";
       const imgSrc = item.querySelector("img")?.src;
@@ -222,10 +224,9 @@ function attachPopupListeners() {
       popupTitle.textContent = title;
       popupDesc.innerHTML = desc;
 
-      // Position popup right below clicked item
-      const rect = item.getBoundingClientRect();
-      popup.style.top = `${rect.bottom + window.scrollY + 10}px`; // 10px below item
-      popup.style.left = `${rect.left + window.scrollX}px`;
+      // Remove any inline positioning — CSS handles centering
+      popup.style.top = "";
+      popup.style.left = "";
 
       popup.classList.add("show");
     });
