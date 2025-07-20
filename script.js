@@ -83,7 +83,7 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// ======== AniList LIVE DATA (with Descriptions) ========
+// ======== AniList LIVE DATA ========
 const username = "Volthaar";
 
 const query = `
@@ -116,7 +116,6 @@ query ($name: String) {
           coverImage {
             medium
           }
-          description(asHtml: false)
         }
       }
     }
@@ -131,7 +130,6 @@ query ($name: String) {
           coverImage {
             medium
           }
-          description(asHtml: false)
         }
       }
     }
@@ -164,74 +162,39 @@ fetch("https://graphql.anilist.co", {
     ${user.statistics.manga.chaptersRead} chapters<br>
     ${user.statistics.manga.volumesRead} volumes read`;
 
-  // Watching anime
+  // Watching (covers only)
   const watchingHTML = animeList.map(entry => `
-    <li class="media-item" data-title="${entry.media.title.romaji}" data-desc="${entry.media.description?.replace(/"/g, '&quot;') || 'No description'}">
+    <li class="media-item">
       <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
     </li>`).join('');
   document.getElementById("watching-anime-list").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
 
-  // Reading manga
+  // Reading (covers only)
   const readingHTML = mangaList.map(entry => `
-    <li class="media-item" data-title="${entry.media.title.romaji}" data-desc="${entry.media.description?.replace(/"/g, '&quot;') || 'No description'}">
+    <li class="media-item">
       <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
     </li>`).join('');
   document.getElementById("reading-manga-list").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
-
-  // Attach popup listeners AFTER DOM updated with media items
-  attachPopupListeners();
 })
 .catch(err => {
   console.error("Error fetching AniList data:", err);
 });
 
 // ======== TABS SWITCHING ========
-const tabButtons = document.querySelectorAll(".tab-btn");
-const tabContents = document.querySelectorAll(".tab-content");
+const tabs = document.querySelectorAll('.tab-btn');
+const contents = document.querySelectorAll('.tab-content');
 
-tabButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    tabButtons.forEach(btn => btn.classList.remove("active"));
-    tabContents.forEach(tc => tc.classList.remove("show"));
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.getAttribute('data-tab');
 
-    button.classList.add("active");
-    const tabId = button.getAttribute("data-tab");
-    document.getElementById("tab-" + tabId).classList.add("show");
+    tabs.forEach(t => t.classList.remove('active'));
+    contents.forEach(c => c.classList.remove('show'));
+
+    tab.classList.add('active');
+    const targetTab = document.getElementById(`tab-${target}`);
+    if (targetTab) {
+      targetTab.classList.add('show');
+    }
   });
-});
-
-// ======== POPUP MODAL ========
-const popup = document.getElementById("media-popup");
-const popupImgContainer = popup.querySelector(".popup-image");
-const popupTitle = popup.querySelector(".popup-title");
-const popupDesc = popup.querySelector(".popup-desc");
-const closeBtn = popup.querySelector(".close-btn");
-
-function attachPopupListeners() {
-  const watchingTab = document.getElementById("tab-watching");
-  const mediaItems = watchingTab.querySelectorAll(".media-item");
-
-  mediaItems.forEach(item => {
-    item.addEventListener("click", () => {
-      const title = item.getAttribute("data-title") || "Unknown Title";
-      const desc = item.getAttribute("data-desc") || "No description available.";
-      const imgSrc = item.querySelector("img")?.src || "";
-
-      popupImgContainer.innerHTML = `<img src="${imgSrc}" alt="${title}" />`;
-      popupTitle.textContent = title;
-      popupDesc.textContent = desc;
-
-      popup.classList.add("show");
-    });
-  });
-}
-
-closeBtn.addEventListener("click", () => {
-  popup.classList.remove("show");
-});
-
-popup.addEventListener("click", (e) => {
-  if (e.target === popup) {
-    popup.classList.remove("show");
-  }
 });
