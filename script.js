@@ -204,38 +204,61 @@ tabs.forEach(tab => {
   });
 });
 
-// ======== POPUP MODAL (IMAGE + DESCRIPTION) ========
+// Tabs switching logic
+const tabButtons = document.querySelectorAll(".tab-btn");
+const tabContents = document.querySelectorAll(".tab-content");
+
+tabButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    // Remove active from all buttons and hide all contents
+    tabButtons.forEach(btn => btn.classList.remove("active"));
+    tabContents.forEach(tc => tc.classList.remove("show"));
+
+    // Activate clicked button and show related tab content
+    button.classList.add("active");
+    const tabId = button.getAttribute("data-tab");
+    document.getElementById("tab-" + tabId).classList.add("show");
+  });
+});
+
+// Popup Modal Elements
 const popup = document.getElementById("media-popup");
 const popupImgContainer = popup.querySelector(".popup-image");
 const popupTitle = popup.querySelector(".popup-title");
 const popupDesc = popup.querySelector(".popup-desc");
 const closeBtn = popup.querySelector(".close-btn");
 
+// Attach popup to media items ONLY inside currently watching/reading tab
 function attachPopupListeners() {
-  document.querySelectorAll(".media-item").forEach(item => {
-    item.addEventListener("click", () => {
-      const currentTab = document.querySelector(".tab-content.show");
-      if (!currentTab || currentTab.id !== "tab-watching") return; // 🔒 Only allow popup in 'Currently Watching'
+  const watchingTab = document.getElementById("tab-watching");
+  const mediaItems = watchingTab.querySelectorAll(".media-item");
 
+  mediaItems.forEach(item => {
+    item.addEventListener("click", () => {
       const title = item.getAttribute("data-title") || "Unknown Title";
       const desc = item.getAttribute("data-desc") || "No description available.";
-      const imgSrc = item.querySelector("img")?.src;
+      const imgSrc = item.querySelector("img")?.src || "";
 
       popupImgContainer.innerHTML = `<img src="${imgSrc}" alt="${title}" />`;
       popupTitle.textContent = title;
-      popupDesc.innerHTML = desc;
+      popupDesc.textContent = desc;
 
       popup.classList.add("show");
     });
   });
 }
 
+// Close popup on close button click
 closeBtn.addEventListener("click", () => {
   popup.classList.remove("show");
 });
 
+// Close popup on clicking outside content
 popup.addEventListener("click", (e) => {
   if (e.target === popup) {
     popup.classList.remove("show");
   }
 });
+
+// Initialize popup listeners (call this after dynamically injecting media items)
+attachPopupListeners();
