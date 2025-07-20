@@ -779,3 +779,21 @@ body.light footer {
   transform: scale(1.05);
 }
 
+#watching-anime-list,
+#reading-manga-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+}
+
+.media-item img {
+  width: 100%;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+}
+
+.media-item img:hover {
+  transform: scale(1.05);
+}
