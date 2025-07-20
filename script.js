@@ -72,3 +72,29 @@ document.body.addEventListener('mousedown', (e) => {
     e.preventDefault();
   }
 });
+
+// Animate bio text staggered
+function animateBioText() {
+  const bioParagraphs = document.querySelectorAll('.bio-block p');
+  bioParagraphs.forEach((p, i) => {
+    setTimeout(() => {
+      p.classList.add('animate');
+    }, i * 300); // 300ms delay per paragraph
+  });
+}
+
+// Optional: only run when bio is in view (scroll trigger)
+function isElementInViewport(el) {
+  const rect = el.getBoundingClientRect();
+  return (
+    rect.top <= window.innerHeight * 0.85 &&
+    rect.bottom >= 0
+  );
+}
+
+window.addEventListener('scroll', () => {
+  const bio = document.querySelector('.bio-block');
+  if (bio && isElementInViewport(bio)) {
+    animateBioText();
+  }
+});
