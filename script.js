@@ -164,3 +164,15 @@ fetch("https://graphql.anilist.co", {
   .catch(err => {
     console.error("AniList Fetch Error:", err);
   });
+
+document.querySelectorAll('.tab-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const tab = button.getAttribute('data-tab');
+
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('show'));
+
+    button.classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('show');
+  });
+});
