@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // ======================
-// 🖱️ CUSTOM CURSOR
+// 🗁 CUSTOM CURSOR
 // ======================
 const cursor = document.querySelector('.cursor');
 window.addEventListener('mousemove', e => {
@@ -75,7 +75,7 @@ document.body.addEventListener('mousedown', (e) => {
 });
 
 // ======================
-// 🎭 STAGGERED BIO ANIMATION
+// 🎝️ STAGGERED BIO ANIMATION
 // ======================
 function animateBioText() {
   const bioParagraphs = document.querySelectorAll('.bio-block p:not(.animate)');
@@ -101,7 +101,7 @@ window.addEventListener('scroll', () => {
 // ======================
 // 🔥 AniList LIVE PROFILE DATA
 // ======================
-                  const username = "Volthaar"; // Case-sensitive
+const username = "Volthaar"; // Case-sensitive
 
 const query = `
 query ($name: String) {
@@ -122,9 +122,29 @@ query ($name: String) {
         volumesRead
       }
     }
+    favourites {
+      anime(sort: FAVOURITES_DESC, perPage: 5) {
+        nodes {
+          title {
+            romaji
+          }
+        }
+      }
+      manga(sort: FAVOURITES_DESC, perPage: 5) {
+        nodes {
+          title {
+            romaji
+          }
+        }
+      }
+    }
+    watching: mediaListOptions {
+      animeList {
+        sectionOrder
+      }
+    }
   }
-}
-`;
+}`;
 
 fetch("https://graphql.anilist.co", {
   method: "POST",
@@ -141,20 +161,17 @@ fetch("https://graphql.anilist.co", {
   .then(data => {
     const user = data.data.User;
 
-    // Avatar & Username
     document.getElementById("anilist-avatar").innerHTML = `
       <img src="${user.avatar.large}" alt="${user.name}'s Avatar">
     `;
     document.getElementById("anilist-username").textContent = user.name;
 
-    // Anime Stats
     document.getElementById("anime-stats").innerHTML = `
       ${user.statistics.anime.count} titles<br>
       ${user.statistics.anime.episodesWatched} episodes<br>
       ${user.statistics.anime.minutesWatched} mins watched
     `;
 
-    // Manga Stats
     document.getElementById("manga-stats").innerHTML = `
       ${user.statistics.manga.count} titles<br>
       ${user.statistics.manga.chaptersRead} chapters<br>
