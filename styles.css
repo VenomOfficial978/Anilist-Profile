@@ -1037,29 +1037,31 @@ button:hover {
   box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
   }
 
+/* ======== POPUP CORE STYLES ======== */
 #media-popup {
-  position: fixed; /* FLOAT ABOVE EVERYTHING */
+  position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* center it dead-center */
-  width: 320px;    /* perfect square width */
-  height: 320px;   /* perfect square height */
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 320px;
   background-color: #1e1e2f;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(255,255,255,0.1);
-  z-index: 9999;   /* make sure it's the top dog */
-  display: none;   /* hidden by default */
+  z-index: 9999;
+  display: none;
   color: #fff;
   animation: fadeIn 0.3s ease-in-out;
-  overflow: auto;  /* in case description text is longer */
+  overflow: auto;
 }
 
+/* Show when triggered */
 #media-popup.show {
   display: block;
 }
 
-/* Popup internal styles */
+/* Popup inner content */
 #media-popup .popup-content img {
   width: 100%;
   height: auto;
@@ -1081,16 +1083,22 @@ button:hover {
   color: #ff4081;
 }
 
+/* Animation */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* Tabs content display fix */
+/* ======== TABS BEHAVIOR ======== */
 .tab-content {
   display: none;
 }
 
 .tab-content.show {
   display: block;
-  }
+}
+
+/* 🔒 Restrict popup display ONLY to tab-watching */
+.tab-content:not(#tab-watching) #media-popup.show {
+  display: none !important;
+}
