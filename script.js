@@ -122,74 +122,99 @@ query ($name: String) {
         volumesRead
       }
     }
-    favourites {
-      anime(sort: FAVOURITES_DESC, perPage: 5) {
-        nodes {
+  }
+
+  anime: MediaListCollection(userName: $name, type: ANIME, status: CURRENT) {
+    lists {
+      entries {
+        media {
           title {
             romaji
           }
-        }
-      }
-      manga(sort: FAVOURITES_DESC, perPage: 5) {
-        nodes {
-          title {
-            romaji
+          coverImage {
+            medium
           }
         }
-      }
-    }
-    watching: mediaListOptions {
-      animeList {
-        sectionOrder
       }
     }
   }
-}`;
+
+  manga: MediaListCollection(userName: $name, type: MANGA, status: CURRENT) {
+    lists {
+      entries {
+        media {
+          title {
+            romaji
+          }
+          coverImage {
+            medium
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+const variables = {
+  name: "Volthaar"
+};
 
 fetch("https://graphql.anilist.co", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    "Accept": "application/json",
+    "Accept": "application/json"
   },
   body: JSON.stringify({
     query: query,
-    variables: { name: username },
-  }),
+    variables: variables
+  })
 })
   .then(res => res.json())
   .then(data => {
     const user = data.data.User;
 
+    // Set avatar and username
     document.getElementById("anilist-avatar").innerHTML = `
       <img src="${user.avatar.large}" alt="${user.name}'s Avatar">
     `;
     document.getElementById("anilist-username").textContent = user.name;
 
+    // Anime stats
     document.getElementById("anime-stats").innerHTML = `
       ${user.statistics.anime.count} titles<br>
       ${user.statistics.anime.episodesWatched} episodes<br>
-      ${user.statistics.anime.minutesWatched} mins watched
+      ${user.statistics.anime.minutesWatched} minutes watched
     `;
 
+    // Manga stats
     document.getElementById("manga-stats").innerHTML = `
       ${user.statistics.manga.count} titles<br>
       ${user.statistics.manga.chaptersRead} chapters<br>
       ${user.statistics.manga.volumesRead} volumes read
     `;
+
+    // Currently Watching (Anime)
+    const animeList = data.data.anime.lists.flatMap(list => list.entries);
+    const watchingHTML = animeList.map(entry => `
+      <div class="media-item">
+        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}">
+        <span>${entry.media.title.romaji}</span>
+      </div>
+    `).join('');
+    document.getElementById("currently-watching").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
+
+    // Currently Reading (Manga)
+    const mangaList = data.data.manga.lists.flatMap(list => list.entries);
+    const readingHTML = mangaList.map(entry => `
+      <div class="media-item">
+        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}">
+        <span>${entry.media.title.romaji}</span>
+      </div>
+    `).join('');
+    document.getElementById("currently-reading").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
   })
-  .catch(err => {
-    console.error("AniList Fetch Error:", err);
+  .catch(error => {
+    console.error("Error fetching AniList data:", error);
   });
-
-document.querySelectorAll('.tab-btn').forEach(button => {
-  button.addEventListener('click', () => {
-    const tab = button.getAttribute('data-tab');
-
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('show'));
-
-    button.classList.add('active');
-    document.getElementById(`tab-${tab}`).classList.add('show');
-  });
-});
