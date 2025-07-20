@@ -1,5 +1,6 @@
-// THEME TOGGLE BUTTON
-
+// ======================
+// 🌙 THEME TOGGLE BUTTON
+// ======================
 const toggleBtn = document.querySelector('.toggle-btn');
 const body = document.body;
 
@@ -9,26 +10,32 @@ toggleBtn.addEventListener('click', () => {
   localStorage.setItem('theme', body.classList.contains('light') ? 'light' : 'dark');
 });
 
-// Load theme on page load from localStorage
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'light') {
     body.classList.add('light');
     toggleBtn.classList.add('light-mode');
   }
+
+  // Animate bio on load if in view
+  const bio = document.querySelector('.bio-block');
+  if (bio && isElementInViewport(bio)) {
+    animateBioText();
+  }
 });
 
-// CUSTOM CURSOR
-
+// ======================
+// 🖱️ CUSTOM CURSOR
+// ======================
 const cursor = document.querySelector('.cursor');
-
 window.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top = e.clientY + 'px';
 });
 
-// Particle generator
-
+// ======================
+// ✨ PARTICLE ANIMATION
+// ======================
 const particlesContainer = document.getElementById('particles');
 const particleCount = 30;
 
@@ -36,60 +43,52 @@ function createParticle() {
   const particle = document.createElement('div');
   particle.classList.add('particle');
 
-  // Random size 4-10 px
   const size = Math.random() * 6 + 4;
   particle.style.width = `${size}px`;
   particle.style.height = `${size}px`;
-
-  // Random left position
   particle.style.left = `${Math.random() * window.innerWidth}px`;
   particle.style.top = `${window.innerHeight + size}px`;
 
-  // Random animation duration (8-15 seconds)
   const duration = Math.random() * 7 + 8;
   particle.style.animationDuration = `${duration}s`;
-
-  // Random animation delay (to spread start times)
   particle.style.animationDelay = `${Math.random() * duration}s`;
 
   particlesContainer.appendChild(particle);
 
-  // Remove particle after animation ends and recreate for infinite loop
   particle.addEventListener('animationend', () => {
     particle.remove();
     createParticle();
   });
 }
 
-// Initialize particles
 for (let i = 0; i < particleCount; i++) {
   createParticle();
 }
 
-// Prevent text selection except inside .bio-block
+// ======================
+// 🚫 PREVENT TEXT SELECT OUTSIDE BIO
+// ======================
 document.body.addEventListener('mousedown', (e) => {
   if (!e.target.closest('.bio-block')) {
     e.preventDefault();
   }
 });
 
-// Animate bio text staggered
+// ======================
+// 🎭 STAGGERED BIO ANIMATION
+// ======================
 function animateBioText() {
-  const bioParagraphs = document.querySelectorAll('.bio-block p');
+  const bioParagraphs = document.querySelectorAll('.bio-block p:not(.animate)');
   bioParagraphs.forEach((p, i) => {
     setTimeout(() => {
       p.classList.add('animate');
-    }, i * 300); // 300ms delay per paragraph
+    }, i * 300);
   });
 }
 
-// Optional: only run when bio is in view (scroll trigger)
 function isElementInViewport(el) {
   const rect = el.getBoundingClientRect();
-  return (
-    rect.top <= window.innerHeight * 0.85 &&
-    rect.bottom >= 0
-  );
+  return rect.top <= window.innerHeight * 0.85 && rect.bottom >= 0;
 }
 
 window.addEventListener('scroll', () => {
@@ -99,7 +98,10 @@ window.addEventListener('scroll', () => {
   }
 });
 
-const username = "Volthaar"; // Change to your actual AniList username
+// ======================
+// 🔥 AniList LIVE PROFILE DATA
+// ======================
+const username = "Volthaar"; // 🔁 Replace with your AniList username (case-sensitive)
 
 const query = `
 query {
@@ -111,29 +113,20 @@ query {
     favourites {
       anime(first: 5) {
         nodes {
-          title {
-            romaji
-          }
+          title { romaji }
           siteUrl
-          coverImage {
-            large
-          }
+          coverImage { large }
         }
       }
     }
   }
-
   MediaListCollection(userName: "${username}", type: ANIME, status: CURRENT) {
     lists {
       entries {
         media {
-          title {
-            romaji
-          }
+          title { romaji }
           siteUrl
-          coverImage {
-            large
-          }
+          coverImage { large }
         }
       }
     }
@@ -151,6 +144,8 @@ fetch('https://graphql.anilist.co', {
 })
 .then(res => res.json())
 .then(data => {
+  if (!data || !data.data) throw new Error("Invalid AniList data format");
+
   const user = data.data.User;
   const watching = data.data.MediaListCollection.lists.flatMap(l => l.entries);
   const favorites = user.favourites.anime.nodes;
@@ -159,20 +154,20 @@ fetch('https://graphql.anilist.co', {
   const currentDiv = document.getElementById('anilist-current');
   const favoritesDiv = document.getElementById('anilist-favorites');
 
-  // Avatar
+  // 👤 Avatar & Username
   avatarDiv.innerHTML = `
-    <img src="${user.avatar.large}" alt="${user.name}" class="avatar-img"/>
+    <img src="${user.avatar.large}" alt="${user.name}" class="avatar-img" />
     <p class="username">@${user.name}</p>
   `;
 
-  // Currently Watching
+  // 📺 Currently Watching
   currentDiv.innerHTML = `
     <h3>📺 Currently Watching</h3>
     <ul class="anime-list">
       ${watching.map(w => `
         <li>
           <a href="${w.media.siteUrl}" target="_blank">
-            <img src="${w.media.coverImage.large}" />
+            <img src="${w.media.coverImage.large}" alt="${w.media.title.romaji}" />
             <span>${w.media.title.romaji}</span>
           </a>
         </li>
@@ -180,14 +175,14 @@ fetch('https://graphql.anilist.co', {
     </ul>
   `;
 
-  // Favorites
+  // 🔥 Favorites
   favoritesDiv.innerHTML = `
     <h3>🔥 Favorites</h3>
     <ul class="anime-list">
       ${favorites.map(f => `
         <li>
           <a href="${f.siteUrl}" target="_blank">
-            <img src="${f.coverImage.large}" />
+            <img src="${f.coverImage.large}" alt="${f.title.romaji}" />
             <span>${f.title.romaji}</span>
           </a>
         </li>
