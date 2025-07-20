@@ -214,9 +214,8 @@ const closeBtn = popup.querySelector(".close-btn");
 function attachPopupListeners() {
   document.querySelectorAll(".media-item").forEach(item => {
     item.addEventListener("click", () => {
-      // Only open popup if in the "watching" or "reading" tab
-      const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab');
-      if (!["watching", "reading"].includes(activeTab)) return;
+      const currentTab = document.querySelector(".tab-content.show");
+      if (!currentTab || currentTab.id !== "tab-watching") return; // 🔒 Only allow popup in 'Currently Watching'
 
       const title = item.getAttribute("data-title") || "Unknown Title";
       const desc = item.getAttribute("data-desc") || "No description available.";
@@ -226,7 +225,7 @@ function attachPopupListeners() {
       popupTitle.textContent = title;
       popupDesc.innerHTML = desc;
 
-      popup.classList.add("show"); // Show centered popup
+      popup.classList.add("show");
     });
   });
 }
@@ -235,7 +234,6 @@ closeBtn.addEventListener("click", () => {
   popup.classList.remove("show");
 });
 
-// Close if you click outside popup content area
 popup.addEventListener("click", (e) => {
   if (e.target === popup) {
     popup.classList.remove("show");
