@@ -1037,7 +1037,55 @@ button:hover {
   box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
   }
 
-/* ======== POPUP CORE STYLES ======== */
+/* === General Styles === */
+body {
+  background-color: #12121f;
+  color: #ddd;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* === Tabs Navigation === */
+.tabs-nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: #aaa;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  color: #fff;
+  border-bottom-color: #ff4081;
+}
+
+/* === Tab Content === */
+.tab-content {
+  display: none;
+}
+
+.tab-content.show {
+  display: block;
+}
+
+/* === Popup Modal Styles === */
 #media-popup {
   position: fixed;
   top: 50%;
@@ -1048,20 +1096,18 @@ button:hover {
   background-color: #1e1e2f;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 0 15px rgba(255,255,255,0.1);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
   z-index: 9999;
   display: none;
   color: #fff;
   animation: fadeIn 0.3s ease-in-out;
-  overflow: auto;
+  overflow-y: auto;
 }
 
-/* Show when triggered */
 #media-popup.show {
   display: block;
 }
 
-/* Popup inner content */
 #media-popup .popup-content img {
   width: 100%;
   height: auto;
@@ -1083,22 +1129,12 @@ button:hover {
   color: #ff4081;
 }
 
-/* Animation */
+/* === Animation Keyframes === */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* ======== TABS BEHAVIOR ======== */
-.tab-content {
-  display: none;
-}
-
-.tab-content.show {
-  display: block;
-}
-
-/* 🔒 Restrict popup display ONLY to tab-watching */
-.tab-content:not(#tab-watching) #media-popup.show {
-  display: none !important;
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
