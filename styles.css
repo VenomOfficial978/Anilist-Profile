@@ -1037,37 +1037,37 @@ button:hover {
   box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
   }
 
-.popup {
-  display: none;
-  position: fixed;        /* LOCKS popup in center of screen */
+#media-popup {
+  position: fixed; /* FLOAT ABOVE EVERYTHING */
   top: 50%;
   left: 50%;
-  width: 320px;           /* fixed width */
-  height: 320px;          /* fixed height to keep it square */
-  transform: translate(-50%, -50%); /* center alignment */
+  transform: translate(-50%, -50%); /* center it dead-center */
+  width: 320px;    /* perfect square width */
+  height: 320px;   /* perfect square height */
   background-color: #1e1e2f;
   padding: 20px;
   border-radius: 12px;
-  color: #fff;
   box-shadow: 0 0 15px rgba(255,255,255,0.1);
+  z-index: 9999;   /* make sure it's the top dog */
+  display: none;   /* hidden by default */
+  color: #fff;
   animation: fadeIn 0.3s ease-in-out;
-  overflow: auto;         /* scroll if content is too tall */
-  z-index: 9999;
+  overflow: auto;  /* in case description text is longer */
 }
 
-.popup.show {
+#media-popup.show {
   display: block;
 }
 
-.popup-content img {
+/* Popup internal styles */
+#media-popup .popup-content img {
   width: 100%;
-  max-height: 120px;      /* keep the image height controlled */
-  object-fit: contain;
+  height: auto;
   border-radius: 8px;
   margin-bottom: 12px;
 }
 
-.close-btn {
+#media-popup .close-btn {
   position: absolute;
   top: 8px;
   right: 12px;
@@ -1077,11 +1077,20 @@ button:hover {
   transition: color 0.2s;
 }
 
-.close-btn:hover {
+#media-popup .close-btn:hover {
   color: #ff4081;
 }
 
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* Tabs content display fix */
+.tab-content {
+  display: none;
+}
+
+.tab-content.show {
+  display: block;
   }
