@@ -797,3 +797,32 @@ body.light footer {
 .media-item img:hover {
   transform: scale(1.05);
 }
+
+.media-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.media-grid .media-item {
+  flex: 1 1 calc(25% - 1rem); /* 4 in a row */
+  max-width: calc(25% - 1rem);
+  display: flex;
+  justify-content: center;
+}
+
+.media-grid .media-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.media-grid .media-item img:hover {
+  transform: scale(1.05);
+}
