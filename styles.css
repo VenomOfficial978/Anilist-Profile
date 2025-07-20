@@ -919,3 +919,93 @@ button:hover {
     transform: translateY(0);
   }
 }
+
+/* 🌌 Smooth Fade + Slide Animations */
+.fade-in-up, .fade-in-left, .zoom-fade {
+  opacity: 0;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.fade-in-up {
+  transform: translateY(30px);
+}
+.fade-in-left {
+  transform: translateX(-30px);
+}
+.zoom-fade {
+  transform: scale(0.9);
+}
+.visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* 🎭 Smooth Tab Transitions */
+.tab-content {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.tab-content.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+  position: relative;
+}
+
+/* 🧠 Typewriter Effect */
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid rgba(255, 255, 255, 0.75);
+  animation: typing 3s steps(30, end), blink 0.75s step-end infinite;
+}
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+@keyframes blink {
+  50% { border-color: transparent }
+}
+
+/* 🕊️ Soft Text Glow */
+.soft-glow {
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255,255,255,0.3), 0 0 10px rgba(255,255,255,0.2);
+}
+
+/* 🪞 Image Hover Glow */
+.inner-img {
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.inner-img:hover {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
+/* 🌠 Parallax Banner */
+.top-img {
+  width: 100%;
+  height: auto;
+  transform: translateY(0px);
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+
+/* 🧱 Grid Layout for Covers */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+  padding: 1rem 0;
+}
+.media-grid img {
+  width: 100%;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+.media-grid img:hover {
+  transform: scale(1.05);
+}
