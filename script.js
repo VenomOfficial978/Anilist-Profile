@@ -98,3 +98,103 @@ window.addEventListener('scroll', () => {
     animateBioText();
   }
 });
+
+const username = "Volthaar"; // Change to your actual AniList username
+
+const query = `
+query {
+  User(name: "${username}") {
+    name
+    avatar {
+      large
+    }
+    favourites {
+      anime(first: 5) {
+        nodes {
+          title {
+            romaji
+          }
+          siteUrl
+          coverImage {
+            large
+          }
+        }
+      }
+    }
+  }
+
+  MediaListCollection(userName: "${username}", type: ANIME, status: CURRENT) {
+    lists {
+      entries {
+        media {
+          title {
+            romaji
+          }
+          siteUrl
+          coverImage {
+            large
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+fetch('https://graphql.anilist.co', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+  body: JSON.stringify({ query })
+})
+.then(res => res.json())
+.then(data => {
+  const user = data.data.User;
+  const watching = data.data.MediaListCollection.lists.flatMap(l => l.entries);
+  const favorites = user.favourites.anime.nodes;
+
+  const avatarDiv = document.getElementById('anilist-avatar');
+  const currentDiv = document.getElementById('anilist-current');
+  const favoritesDiv = document.getElementById('anilist-favorites');
+
+  // Avatar
+  avatarDiv.innerHTML = `
+    <img src="${user.avatar.large}" alt="${user.name}" class="avatar-img"/>
+    <p class="username">@${user.name}</p>
+  `;
+
+  // Currently Watching
+  currentDiv.innerHTML = `
+    <h3>📺 Currently Watching</h3>
+    <ul class="anime-list">
+      ${watching.map(w => `
+        <li>
+          <a href="${w.media.siteUrl}" target="_blank">
+            <img src="${w.media.coverImage.large}" />
+            <span>${w.media.title.romaji}</span>
+          </a>
+        </li>
+      `).join('')}
+    </ul>
+  `;
+
+  // Favorites
+  favoritesDiv.innerHTML = `
+    <h3>🔥 Favorites</h3>
+    <ul class="anime-list">
+      ${favorites.map(f => `
+        <li>
+          <a href="${f.siteUrl}" target="_blank">
+            <img src="${f.coverImage.large}" />
+            <span>${f.title.romaji}</span>
+          </a>
+        </li>
+      `).join('')}
+    </ul>
+  `;
+})
+.catch(err => {
+  console.error("AniList fetch error:", err);
+});
