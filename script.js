@@ -15,7 +15,6 @@ window.addEventListener('DOMContentLoaded', () => {
     toggleBtn.classList.add('light-mode');
   }
 
-  // Animate bio paragraphs if in viewport on load
   const bio = document.querySelector('.bio-block');
   if (bio && isElementInViewport(bio)) {
     animateBioText();
@@ -85,7 +84,7 @@ window.addEventListener('scroll', () => {
 });
 
 // ======== AniList LIVE DATA ========
-const username = "Volthaar"; // change to your AniList username
+const username = "Volthaar";
 
 const query = `
 query ($name: String) {
@@ -143,33 +142,43 @@ fetch("https://graphql.anilist.co", {
   headers: { "Content-Type": "application/json", "Accept": "application/json" },
   body: JSON.stringify({ query, variables: { name: username } }),
 })
-  .then(res => res.json())
-  .then(data => {
-    const user = data.data.User;
+.then(res => res.json())
+.then(data => {
+  const user = data.data.User;
+  const animeList = data.data.anime.lists.flatMap(list => list.entries);
+  const mangaList = data.data.manga.lists.flatMap(list => list.entries);
 
-    // Avatar & username
-    document.getElementById("anilist-avatar").innerHTML = `<img src="${user.avatar.large}" alt="${user.name}'s Avatar">`;
-    document.getElementById("anilist-username").textContent = user.name;
+  // Avatar & username
+  document.getElementById("anilist-avatar").innerHTML = `<img src="${user.avatar.large}" alt="${user.name}'s Avatar">`;
+  document.getElementById("anilist-username").textContent = user.name;
 
-    // Stats
-    document.getElementById("anime-stats").innerHTML = `${user.statistics.anime.count} titles<br>${user.statistics.anime.episodesWatched} episodes<br>${user.statistics.anime.minutesWatched} minutes watched`;
-    document.getElementById("manga-stats").innerHTML = `${user.statistics.manga.count} titles<br>${user.statistics.manga.chaptersRead} chapters<br>${user.statistics.manga.volumesRead} volumes read`;
+  // Stats
+  document.getElementById("anime-stats").innerHTML = `
+    ${user.statistics.anime.count} titles<br>
+    ${user.statistics.anime.episodesWatched} episodes<br>
+    ${user.statistics.anime.minutesWatched} minutes watched`;
+  document.getElementById("manga-stats").innerHTML = `
+    ${user.statistics.manga.count} titles<br>
+    ${user.statistics.manga.chaptersRead} chapters<br>
+    ${user.statistics.manga.volumesRead} volumes read`;
 
-    // Currently Watching Anime List - show only covers
-const watchingHTML = animeList.map(entry => `
-  <li class="media-item">
-    <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
-  </li>
-`).join('');
-document.getElementById("watching-anime-list").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
+  // Watching (covers only)
+  const watchingHTML = animeList.map(entry => `
+    <li class="media-item">
+      <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
+    </li>`).join('');
+  document.getElementById("watching-anime-list").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
 
-// Currently Reading Manga List - show only covers
-const readingHTML = mangaList.map(entry => `
-  <li class="media-item">
-    <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
-  </li>
-`).join('');
-document.getElementById("reading-manga-list").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
+  // Reading (covers only)
+  const readingHTML = mangaList.map(entry => `
+    <li class="media-item">
+      <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
+    </li>`).join('');
+  document.getElementById("reading-manga-list").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
+})
+.catch(err => {
+  console.error("Error fetching AniList data:", err);
+});
 
 // ======== TABS SWITCHING ========
 const tabs = document.querySelectorAll('.tab-btn');
@@ -179,12 +188,13 @@ tabs.forEach(tab => {
   tab.addEventListener('click', () => {
     const target = tab.getAttribute('data-tab');
 
-    // Remove active/show classes
     tabs.forEach(t => t.classList.remove('active'));
     contents.forEach(c => c.classList.remove('show'));
 
-    // Add active/show to clicked
     tab.classList.add('active');
-    document.getElementById(`tab-${target}`).classList.add('show');
+    const targetTab = document.getElementById(`tab-${target}`);
+    if (targetTab) {
+      targetTab.classList.add('show');
+    }
   });
 });
