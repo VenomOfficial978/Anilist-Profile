@@ -696,3 +696,37 @@ body.light footer {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+.currently-section {
+  padding: 2rem;
+  color: var(--text);
+}
+
+.watching-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.media-block {
+  background: var(--card);
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  max-width: 300px;
+}
+
+.media-list {
+  list-style: none;
+  padding: 0;
+}
+
+.media-list li {
+  margin: 0.5rem 0;
+}
+
+.media-list a {
+  color: var(--accent);
+  text-decoration: none;
+  }
