@@ -1010,15 +1010,29 @@ button:hover {
   transform: scale(1.05);
 }
 
-.media-list img {
-  border: 3px solid rgba(255, 255, 255, 0.2); /* Soft white border */
+/* === Anime Covers === */
+#watching-anime-list img {
+  border: 3px solid #00aaff; /* Bright blue for anime */
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  margin: 8px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.media-list img:hover {
+#watching-anime-list img:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 170, 255, 0.4);
 }
+
+
+/* === Manga Covers === */
+#reading-manga-list img {
+  border: 3px solid #ff4081; /* Pinkish-red for manga */
+  border-radius: 10px;
+  margin: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#reading-manga-list img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
+  }
