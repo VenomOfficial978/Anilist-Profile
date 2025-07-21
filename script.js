@@ -202,9 +202,10 @@ tabs.forEach(tab => {
 async function fetchAniListActivity(username) {
   const query = `
     query ($name: String) {
-      Page(perPage: 10) {
-        activities(userName: $name, sort: ID_DESC) {
+      Page(perPage: 10, userName: $name) {
+        activities {
           ... on ListActivity {
+            id
             type
             status
             progress
@@ -214,6 +215,9 @@ async function fetchAniListActivity(username) {
                 romaji
               }
               siteUrl
+              coverImage {
+                large
+              }
             }
           }
         }
@@ -221,44 +225,49 @@ async function fetchAniListActivity(username) {
     }
   `;
 
-  const variables = {
-    name: username,
-  };
+  const variables = { name: username };
 
   try {
     const response = await fetch("https://graphql.anilist.co", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, variables })
     });
 
     const { data } = await response.json();
 
     const activityList = document.getElementById("anilist-activity-list");
-    if (!activityList) return;
+    if (!activityList) {
+      console.warn("No element with ID 'anilist-activity-list' found in DOM.");
+      return;
+    }
+
     activityList.innerHTML = "";
 
-    data.Page.activities.forEach((activity) => {
+    data.Page.activities.forEach(activity => {
       const li = document.createElement("li");
-      const mediaTitle = activity.media?.title?.romaji || "Unknown Title";
-      const mediaLink = activity.media?.siteUrl || "#";
-      const progress = activity.progress ? ` – ${activity.progress}` : "";
+      li.className = "media-entry";
 
-      li.innerHTML = `<a href="${mediaLink}" target="_blank">${activity.status}${progress} <b>${mediaTitle}</b></a>`;
+      li.innerHTML = `
+        <a href="${activity.media.siteUrl}" target="_blank">
+          <img src="${activity.media.coverImage.large}" alt="Cover" class="media-cover">
+        </a>
+        <div class="media-info">
+          <h4>${activity.media.title.romaji}</h4>
+          <p>${activity.status}${activity.progress ? ` - ${activity.progress}` : ""}</p>
+          <small>${new Date(activity.createdAt * 1000).toLocaleString()}</small>
+        </div>
+      `;
+
       activityList.appendChild(li);
     });
-  } catch (err) {
-    console.error("Failed to fetch AniList activity:", err);
+
+  } catch (error) {
+    console.error("Failed to fetch AniList activity:", error);
   }
 }
 
-// 🟢 Call this when DOM is ready
-document.addEventListener("DOMContentLoaded", () => {
+// Automatically load on page load
+window.addEventListener("load", () => {
   fetchAniListActivity("Volthaar");
 });
