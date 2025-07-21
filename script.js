@@ -198,3 +198,86 @@ tabs.forEach(tab => {
     }
   });
 });
+
+const username = "Volthaar"; // Your AniList username
+
+const fullQuery = `
+query ($name: String) {
+  User(name: $name) {
+    statistics {
+      anime {
+        episodesWatched
+      }
+      manga {
+        chaptersRead
+      }
+    }
+    anime: MediaListCollection(userName: $name, type: ANIME, status: CURRENT) {
+      lists { entries { media { title { romaji } coverImage { medium } } } }
+    }
+    manga: MediaListCollection(userName: $name, type: MANGA, status: CURRENT) {
+      lists { entries { media { title { romaji } coverImage { medium } } } }
+    }
+  }
+}
+`;
+
+async function fetchAniListData() {
+  const res = await fetch("https://graphql.anilist.co", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify({
+      query: fullQuery,
+      variables: { name: username }
+    })
+  });
+  return (await res.json()).data.User;
+}
+
+fetchAniListData()
+  .then(user => {
+    const animeCount = user.statistics.anime.episodesWatched;
+    const mangaCount = user.statistics.manga.chaptersRead;
+    setupCultivationTab(animeCount, mangaCount);
+  })
+  .catch(console.error);
+
+function setupCultivationTab(animeCount, mangaCount) {
+  const tabContent = document.getElementById("tab-cultivation");
+  if (!tabContent) return;
+
+  tabContent.innerHTML = `
+    <div class="cultivation-container">
+      <h2>💠 Cultivation Stats</h2>
+      <div class="cultivation-switch">
+        <button data-sub="anime" class="cult-sub-btn active">Anime Realm</button>
+        <button data-sub="manga" class="cult-sub-btn">Manga Realm</button>
+      </div>
+      <div class="cultivation-view" data-view="anime">
+        <p><strong>Episodes Watched:</strong> ${animeCount.toLocaleString()}</p>
+        <p><em>"Eternal Dao Master of Anime"</em></p>
+      </div>
+      <div class="cultivation-view hidden" data-view="manga">
+        <p><strong>Chapters Read:</strong> ${mangaCount.toLocaleString()}</p>
+        <p><em>"Heavenly Scripture Devourer"</em></p>
+      </div>
+    </div>
+  `;
+
+  const subs = tabContent.querySelectorAll(".cult-sub-btn");
+  const views = tabContent.querySelectorAll(".cultivation-view");
+
+  subs.forEach(btn => {
+    btn.addEventListener("click", () => {
+      subs.forEach(b => b.classList.remove("active"));
+      views.forEach(v => v.classList.add("hidden"));
+
+      btn.classList.add("active");
+      tabContent.querySelector(`[data-view="${btn.dataset.sub}"]`)
+                .classList.remove("hidden");
+    });
+  });
+}
