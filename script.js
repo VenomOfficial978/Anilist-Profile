@@ -198,3 +198,60 @@ tabs.forEach(tab => {
     }
   });
 });
+
+async function fetchRecentActivity() {
+  const username = "DashBear"; // change if using another AniList user
+  const query = `
+    query ($name: String) {
+      Page(page: 1, perPage: 10) {
+        activities(userName: $name, type: MEDIA_LIST) {
+          ... on ListActivity {
+            media {
+              title {
+                romaji
+              }
+              type
+            }
+            status
+            progress
+            createdAt
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = { name: username };
+
+  const response = await fetch("https://graphql.anilist.co", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, variables }),
+  });
+
+  const data = await response.json();
+  const activities = data.data.Page.activities;
+  const container = document.getElementById("recent-activity-list");
+
+  container.innerHTML = ""; // Clear in case of reloads
+
+  activities.forEach(activity => {
+    const title = activity.media.title.romaji;
+    const type = activity.media.type;
+    const progress = activity.progress;
+    const status = activity.status;
+    const date = new Date(activity.createdAt * 1000).toLocaleString();
+
+    const el = document.createElement("div");
+    el.className = "activity-item";
+    el.innerHTML = `
+      <h3>${status} ${type} - ${title}</h3>
+      <p>Progress: ${progress}</p>
+      <p><i>${date}</i></p>
+    `;
+
+    container.appendChild(el);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", fetchRecentActivity);
