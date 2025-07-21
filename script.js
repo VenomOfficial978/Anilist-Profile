@@ -200,7 +200,7 @@ tabs.forEach(tab => {
 });
 
 async function fetchRecentActivity() {
-  const username = "DashBear"; // change if using another AniList user
+  const username = "Volthaar"; // change if using another AniList user
   const query = `
     query ($name: String) {
       Page(page: 1, perPage: 10) {
