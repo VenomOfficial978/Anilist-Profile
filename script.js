@@ -83,9 +83,10 @@ window.addEventListener('scroll', () => {
   }
 });
 
-const username = "Volthaar"; // Your AniList username
+// ======== AniList LIVE DATA ========
+const username = "Volthaar";
 
-const fullQuery = `
+const query = `
 query ($name: String) {
   User(name: $name) {
     name
@@ -106,105 +107,94 @@ query ($name: String) {
     }
   }
   anime: MediaListCollection(userName: $name, type: ANIME, status: CURRENT) {
-    lists { entries { media { title { romaji } coverImage { medium } } } }
+    lists {
+      entries {
+        media {
+          title {
+            romaji
+          }
+          coverImage {
+            medium
+          }
+        }
+      }
+    }
   }
   manga: MediaListCollection(userName: $name, type: MANGA, status: CURRENT) {
-    lists { entries { media { title { romaji } coverImage { medium } } } }
+    lists {
+      entries {
+        media {
+          title {
+            romaji
+          }
+          coverImage {
+            medium
+          }
+        }
+      }
+    }
   }
 }
 `;
 
-async function fetchAniListData() {
-  try {
-    const res = await fetch("https://graphql.anilist.co", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify({
-        query: fullQuery,
-        variables: { name: username }
-      })
-    });
+fetch("https://graphql.anilist.co", {
+  method: "POST",
+  headers: { "Content-Type": "application/json", "Accept": "application/json" },
+  body: JSON.stringify({ query, variables: { name: username } }),
+})
+.then(res => res.json())
+.then(data => {
+  const user = data.data.User;
+  const animeList = data.data.anime.lists.flatMap(list => list.entries);
+  const mangaList = data.data.manga.lists.flatMap(list => list.entries);
 
-    const data = (await res.json()).data;
+  // Avatar & username
+  document.getElementById("anilist-avatar").innerHTML = `<img src="${user.avatar.large}" alt="${user.name}'s Avatar">`;
+  document.getElementById("anilist-username").textContent = user.name;
 
-    const user = data.User;
-    const animeList = data.anime.lists.flatMap(list => list.entries);
-    const mangaList = data.manga.lists.flatMap(list => list.entries);
+  // Stats
+  document.getElementById("anime-stats").innerHTML = `
+    ${user.statistics.anime.count} titles<br>
+    ${user.statistics.anime.episodesWatched} episodes<br>
+    ${user.statistics.anime.minutesWatched} minutes watched`;
+  document.getElementById("manga-stats").innerHTML = `
+    ${user.statistics.manga.count} titles<br>
+    ${user.statistics.manga.chaptersRead} chapters<br>
+    ${user.statistics.manga.volumesRead} volumes read`;
 
-    // Avatar & Username
-    document.getElementById("anilist-avatar").innerHTML = `<img src="${user.avatar.large}" alt="${user.name}'s Avatar">`;
-    document.getElementById("anilist-username").textContent = user.name;
+  // Watching (covers only)
+  const watchingHTML = animeList.map(entry => `
+    <li class="media-item">
+      <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
+    </li>`).join('');
+  document.getElementById("watching-anime-list").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
 
-    // Stats
-    document.getElementById("anime-stats").innerHTML = `
-      ${user.statistics.anime.count} titles<br>
-      ${user.statistics.anime.episodesWatched} episodes<br>
-      ${user.statistics.anime.minutesWatched} minutes watched`;
-    document.getElementById("manga-stats").innerHTML = `
-      ${user.statistics.manga.count} titles<br>
-      ${user.statistics.manga.chaptersRead} chapters<br>
-      ${user.statistics.manga.volumesRead} volumes read`;
+  // Reading (covers only)
+  const readingHTML = mangaList.map(entry => `
+    <li class="media-item">
+      <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
+    </li>`).join('');
+  document.getElementById("reading-manga-list").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
+})
+.catch(err => {
+  console.error("Error fetching AniList data:", err);
+});
 
-    // Watching (covers only)
-    const watchingHTML = animeList.map(entry => `
-      <li class="media-item">
-        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
-      </li>`).join('');
-    document.getElementById("watching-anime-list").innerHTML = watchingHTML || "<p>Not watching anything currently.</p>";
+// ======== TABS SWITCHING ========
+const tabs = document.querySelectorAll('.tab-btn');
+const contents = document.querySelectorAll('.tab-content');
 
-    // Reading (covers only)
-    const readingHTML = mangaList.map(entry => `
-      <li class="media-item">
-        <img src="${entry.media.coverImage.medium}" alt="${entry.media.title.romaji}" title="${entry.media.title.romaji}" />
-      </li>`).join('');
-    document.getElementById("reading-manga-list").innerHTML = readingHTML || "<p>Not reading anything currently.</p>";
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.getAttribute('data-tab');
 
-    // Cultivation Tab Setup
-    setupCultivationTab(user.statistics.anime.episodesWatched, user.statistics.manga.chaptersRead);
+    tabs.forEach(t => t.classList.remove('active'));
+    contents.forEach(c => c.classList.remove('show'));
 
-  } catch (err) {
-    console.error("Error fetching AniList data:", err);
-  }
-}
-
-fetchAniListData();
-
-function setupCultivationTab(animeCount, mangaCount) {
-  const tabContent = document.getElementById("tab-cultivation");
-  if (!tabContent) return;
-
-  tabContent.innerHTML = `
-    <div class="cultivation-container">
-      <h2>💠 Cultivation Stats</h2>
-      <div class="cultivation-switch">
-        <button data-sub="anime" class="cult-sub-btn active">Anime Realm</button>
-        <button data-sub="manga" class="cult-sub-btn">Manga Realm</button>
-      </div>
-      <div class="cultivation-view" data-view="anime">
-        <p><strong>Episodes Watched:</strong> ${animeCount.toLocaleString()}</p>
-        <p><em>"Eternal Dao Master of Anime"</em></p>
-      </div>
-      <div class="cultivation-view hidden" data-view="manga">
-        <p><strong>Chapters Read:</strong> ${mangaCount.toLocaleString()}</p>
-        <p><em>"Heavenly Scripture Devourer"</em></p>
-      </div>
-    </div>
-  `;
-
-  const subs = tabContent.querySelectorAll(".cult-sub-btn");
-  const views = tabContent.querySelectorAll(".cultivation-view");
-
-  subs.forEach(btn => {
-    btn.addEventListener("click", () => {
-      subs.forEach(b => b.classList.remove("active"));
-      views.forEach(v => v.classList.add("hidden"));
-
-      btn.classList.add("active");
-      tabContent.querySelector(`[data-view="${btn.dataset.sub}"]`)
-                .classList.remove("hidden");
-    });
+    tab.classList.add('active');
+    const targetTab = document.getElementById(`tab-${target}`);
+    if (targetTab) {
+      targetTab.classList.add('show');
+    }
   });
-}
+});
