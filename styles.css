@@ -1138,3 +1138,28 @@ body {
     opacity: 1;
   }
 }
+
+.activity-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.activity-item {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.activity-item h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.activity-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
