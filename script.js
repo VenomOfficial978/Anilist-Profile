@@ -199,59 +199,66 @@ tabs.forEach(tab => {
   });
 });
 
-async function fetchRecentActivity() {
-  const username = "Volthaar"; // change if using another AniList user
+async function fetchAniListActivity(username) {
   const query = `
     query ($name: String) {
-      Page(page: 1, perPage: 10) {
-        activities(userName: $name, type: MEDIA_LIST) {
+      Page(perPage: 10) {
+        activities(userName: $name, sort: ID_DESC) {
           ... on ListActivity {
+            type
+            status
+            progress
+            createdAt
             media {
               title {
                 romaji
               }
-              type
+              siteUrl
             }
-            status
-            progress
-            createdAt
           }
         }
       }
     }
   `;
 
-  const variables = { name: username };
+  const variables = {
+    name: username,
+  };
 
-  const response = await fetch("https://graphql.anilist.co", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query, variables }),
-  });
+  try {
+    const response = await fetch("https://graphql.anilist.co", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+    });
 
-  const data = await response.json();
-  const activities = data.data.Page.activities;
-  const container = document.getElementById("recent-activity-list");
+    const { data } = await response.json();
 
-  container.innerHTML = ""; // Clear in case of reloads
+    const activityList = document.getElementById("anilist-activity-list");
+    if (!activityList) return;
+    activityList.innerHTML = "";
 
-  activities.forEach(activity => {
-    const title = activity.media.title.romaji;
-    const type = activity.media.type;
-    const progress = activity.progress;
-    const status = activity.status;
-    const date = new Date(activity.createdAt * 1000).toLocaleString();
+    data.Page.activities.forEach((activity) => {
+      const li = document.createElement("li");
+      const mediaTitle = activity.media?.title?.romaji || "Unknown Title";
+      const mediaLink = activity.media?.siteUrl || "#";
+      const progress = activity.progress ? ` – ${activity.progress}` : "";
 
-    const el = document.createElement("div");
-    el.className = "activity-item";
-    el.innerHTML = `
-      <h3>${status} ${type} - ${title}</h3>
-      <p>Progress: ${progress}</p>
-      <p><i>${date}</i></p>
-    `;
-
-    container.appendChild(el);
-  });
+      li.innerHTML = `<a href="${mediaLink}" target="_blank">${activity.status}${progress} <b>${mediaTitle}</b></a>`;
+      activityList.appendChild(li);
+    });
+  } catch (err) {
+    console.error("Failed to fetch AniList activity:", err);
+  }
 }
 
-document.addEventListener("DOMContentLoaded", fetchRecentActivity);
+// 🟢 Call this when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  fetchAniListActivity("Volthaar");
+});
